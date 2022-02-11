@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>image/关闭小.png</file>
+  </qresource>
+</RCC>
