@@ -4,10 +4,9 @@ from Network import NetworkLogic
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QIcon,QFont
 import utils.global_var as g
-from Plot import Line_plot
 from Network.stopThreading import stop_thread
 
-class MainWindow(WidgetLogic,NetworkLogic,Line_plot):
+class MainWindow(WidgetLogic,NetworkLogic,):
     def __init__(self, parent=None):
         super().__init__(parent)
         # 信号量初始化
@@ -19,11 +18,13 @@ class MainWindow(WidgetLogic,NetworkLogic,Line_plot):
     # 画图开关槽函数
     def paint_switch_handler(self):
         if(self.ui.socket_paint_switch.isChecked() == True):
-            self.pic.on = True
-            self.pic.start_pic_thread()
+            if not self.pic.first_on:
+                self.pic.first_on = True
+                self.pic.start()
+            else:
+                self.pic.resume()
         else:
-            self.pic.on = False
-            # 待完成:线程休眠
+            self.pic.pause()
             
     # 控制socket的开关函数
     def socket_control_handler(self):
@@ -48,7 +49,7 @@ class MainWindow(WidgetLogic,NetworkLogic,Line_plot):
         重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
         :param event: close()触发的事件
         """
-        stop_thread(self.pic.plot_thread) # 关闭画图线程
+        self.pic.stop()
         if(self.cur_mode == 1):
             self.close_conect()
 

@@ -25,9 +25,9 @@ class WidgetLogic(QMainWindow):
         self.cur_port = self.ui.port_input.text()
         self.cur_recv_data_list = []
         self.data_dict = {
-            "series1":[],
-            "series2":[],
-            "series3":[],
+            "s1":[],
+            "s2":[],
+            "s3":[],
         }
 
     # 所有控件的初始化函数
@@ -75,16 +75,16 @@ class WidgetLogic(QMainWindow):
         if(len(self.cur_recv_data_list) < 2000):
             # self.cur_recv_data_list.append(int(float(cur_data)))
             self.cur_recv_data_list.append(cur_data)
+        # 将每一列数据提取到字典中
         for idx,key in enumerate(self.data_dict):
             self.data_dict[key].append(float(cur_data[idx]))
 
+        self.pic.cur_x += 1
         # 给绘图类更新数据
         self.pic.new_data = True
-        self.pic.data_dict = self.data_dict
+        self.pic.data_dict = self.data_dict # 替换最新字典
         # 像文本框中写入内容
         self.ui.socket_recv_show.append(str(cur_data))
-        # 绘图(想放在主函数中开启这个线程)
-        # self.pic.plot(self.data_dict)
 
 
 
