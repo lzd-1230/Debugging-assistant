@@ -12,6 +12,7 @@ class WidgetLogic(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()     # self.ui就可以获得ui的属性
         self.ui.setupUi(self)  # 初始化UI界面
+        self.setWindowOpacity(0.9) # 窗口透明度
         self.cur_mode = 0      # 状态未连接
         self.widgets_init()
         self.vars_init()
@@ -50,7 +51,7 @@ class WidgetLogic(QMainWindow):
         # 默认开关不开
         self.ui.socket_switch.setEnabled(False)
         # 待完成
-        self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler)
+        # self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler)
         # self.save_socket_data.toggled.connect(save_data)
         self.ui.clear_data_btn.toggled.connect(self._clear_data)
 
@@ -76,17 +77,16 @@ class WidgetLogic(QMainWindow):
             self.cur_recv_data_list.append(cur_data)
         for idx,key in enumerate(self.data_dict):
             self.data_dict[key].append(float(cur_data[idx]))
+
+        # 给绘图类更新数据
+        self.pic.new_data = True
+        self.pic.data_dict = self.data_dict
         # 像文本框中写入内容
         self.ui.socket_recv_show.append(str(cur_data))
-        # 绘图
-        self.pic.plot(self.data_dict)
+        # 绘图(想放在主函数中开启这个线程)
+        # self.pic.plot(self.data_dict)
 
 
-    def paint_switch_handler(self):
-        if(self.ui.socket_paint_switch.isChecked() == True):
-            self.pic.on = True
-        else:
-            self.pic.on = False
 
 
         

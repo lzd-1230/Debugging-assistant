@@ -28,7 +28,7 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="8,1">
           <item>
-           <widget class="PlotWidget" name="socket_graph"/>
+           <widget class="GraphicsLayoutWidget" name="socket_graph"/>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -75,7 +75,7 @@
              <widget class="QLineEdit" name="port_input">
               <property name="minimumSize">
                <size>
-                <width>93</width>
+                <width>90</width>
                 <height>0</height>
                </size>
               </property>
@@ -239,7 +239,7 @@
      <x>0</x>
      <y>0</y>
      <width>869</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -258,9 +258,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlotWidget</class>
+   <class>GraphicsLayoutWidget</class>
    <extends>QGraphicsView</extends>
-   <header location="global">pyqtgraph</header>
+   <header>pyqtgraph</header>
   </customwidget>
  </customwidgets>
  <resources/>

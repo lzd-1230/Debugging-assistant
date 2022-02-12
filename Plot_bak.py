@@ -3,12 +3,12 @@ import pyqtgraph as pg
 class Line_plot():
     def __init__(self,widget):
         self.win = widget
-        self.legend = pg.LegendItem((40,30))
+        self.legend = pg.LegendItem((40,30),justify='right')
         self.legend.setParentItem(self.win.graphicsItem())
         self.win.showGrid(x=True, y=True, alpha=0.5) 
-        self.p2 = self.win.plot(pen='g',name="s1") # 返回的是PlotDataItem对象
-        self.p1 = self.win.plot(pen='w',name="s1")
-        self.p3 = self.win.plot(pen='y',name="s1")
+        self.p2 = self.win.plot(pen='g',) # 返回的是PlotDataItem对象
+        self.p1 = self.win.plot(pen='w',)
+        self.p3 = self.win.plot(pen='y',)
 
         self.legend.addItem(self.p1,'p1')
         self.legend.addItem(self.p2,'p2')

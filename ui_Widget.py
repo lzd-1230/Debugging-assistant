@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.socket_graph = PlotWidget(self.tab)
+        self.socket_graph = GraphicsLayoutWidget(self.tab)
         self.socket_graph.setObjectName("socket_graph")
         self.horizontalLayout_3.addWidget(self.socket_graph)
         self.verticalLayout_8 = QtWidgets.QVBoxLayout()
@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.label_4.setObjectName("label_4")
         self.verticalLayout_8.addWidget(self.label_4)
         self.port_input = QtWidgets.QLineEdit(self.tab)
-        self.port_input.setMinimumSize(QtCore.QSize(93, 0))
+        self.port_input.setMinimumSize(QtCore.QSize(90, 0))
         self.port_input.setObjectName("port_input")
         self.verticalLayout_8.addWidget(self.port_input)
         self.socket_switch = QtWidgets.QCheckBox(self.tab)
@@ -147,7 +147,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.Mainwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 869, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 869, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.toolBar = QtWidgets.QToolBar(MainWindow)
@@ -180,4 +180,4 @@ class Ui_MainWindow(object):
         self.clear_data_btn.setText(_translate("MainWindow", "清空数据"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "串口模式"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
-from pyqtgraph import PlotWidget
+from pyqtgraph import GraphicsLayoutWidget

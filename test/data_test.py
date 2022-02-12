@@ -7,7 +7,7 @@ import struct
 def main():
     # 构造数据
     with open("./data.txt",mode="w") as f:
-        for i in range(10):
+        for i in range(1000):
             for i in range(3):
                 data = round(1000*random.random(),2)
                 if(i<2):
