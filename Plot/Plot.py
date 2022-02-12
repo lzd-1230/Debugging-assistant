@@ -24,15 +24,11 @@ class Line_plot(threading.Thread):
         self.data_dict = dict()
         self.cur_x = 0
         self.on_click_regin = False 
+        self.color_list = ["#ff7f0e","#2ca02c","#1f77b4"]
+
         pen_list = [
-            pg.mkPen(width=3,color="#ff7f0e"),
-            pg.mkPen(width=3,color="#2ca02c"),
-            pg.mkPen(width=3,color="#1f77b4"),
-            pg.mkPen(widget=2,color="r"),
-            pg.mkPen(widget=2,color="b"),
-            pg.mkPen(widget=2,color="c"),
-            pg.mkPen(widget=2,color="m"),
-            pg.mkPen(widget=2,color="w"),
+            pg.mkPen(width=3,color=self.color_list[i]) 
+            for i in range(len(self.curve_names))
         ]
 
         # 样式设置
@@ -40,10 +36,9 @@ class Line_plot(threading.Thread):
         # 添加标签(标签也要占据行数)
         self.label = pg.LabelItem(justify='right')
         self.win.addItem(self.label,row=0,col=0)
-        self.layout = self.win.ci.layout
+        self.layout = self.win.ci.layout # 拿到graphwindow的布局
         self.layout.setRowStretchFactor(1,3)
         self.layout.setRowStretchFactor(2,1)
-
 
         # 创建画图区域
         self.p1 = self.win.addPlot(row=1,col=0)    # 返回一个PlotItem对象
@@ -119,28 +114,31 @@ class Line_plot(threading.Thread):
 
     # 这个函数没有反应
     def mouseMoved(self,evt):
-        vb = self.p1.vb  # 拿到visualbox对象
-        key_list = list(self.data_dict)
-        data1 = self.data_dict[key_list[0]]
-        data2 = self.data_dict[key_list[1]]
-        data3 = self.data_dict[key_list[2]]
-        
-        pos = evt[0]  ## using signal proxy turns original arguments into a tuple
-
         # 如果在p1的里面
+        pos = evt[0]  # using signal proxy turns original arguments into a tuple
         if self.p1.sceneBoundingRect().contains(pos):
+            vb = self.p1.vb  # 拿到visualbox对象
             mousePoint = vb.mapSceneToView(pos)  # 坐标映射到图像里的坐标 
-            index = int(mousePoint.x())
-            if index > 0:
-                self.label.setText("""<span style='font-size: 12pt'>x=%0.1f,
-                                    <span style='color: red'>y1=%0.1f</span>,
-                                    <span style='color: green'>y2=%0.1f</span>
-                                    <span style='color: blue'>y3=%0.1f</span>
-                                    """ \
-                                    % (mousePoint.x(), data1[index], data2[index], data3[index]))
-            self.vLine.setPos(mousePoint.x())
-            self.hLine.setPos(mousePoint.y())
+            res_text = self.get_stats_text(evt,mousePoint)
+            self.label.setText(res_text)
 
+
+    def get_stats_text(self,evt,mousePoint):
+        index = int(mousePoint.x())
+        self.vLine.setPos(mousePoint.x())
+        self.hLine.setPos(mousePoint.y())
+        x_text = f"<span style='font-size: 12pt'>x={mousePoint.x():.2} "
+        tmp = ""
+        if index > 0:
+            for idx,key in enumerate(self.curve_names):
+                color = self.color_list[idx]
+                data = self.data_dict[key][index]
+                tmp += f"<span style='color:{color}'>{key}={data}</span> "
+        return x_text+tmp
+
+
+
+        
     def run(self):
         while self.__running.isSet():
             self.__flag.wait()
