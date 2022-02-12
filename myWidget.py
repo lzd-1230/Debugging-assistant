@@ -12,11 +12,11 @@ class WidgetLogic(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()     # self.ui就可以获得ui的属性
         self.ui.setupUi(self)  # 初始化UI界面
-        self.setWindowOpacity(0.9) # 窗口透明度
+        # self.setWindowOpacity(0.9) # 窗口透明度
         self.cur_mode = 0      # 状态未连接
         self.widgets_init()
-        self.vars_init()
         self.pic = Line_plot(self.ui.socket_graph)
+        self.vars_init()
     
     # 公共变量初始化
     def vars_init(self):
@@ -24,11 +24,8 @@ class WidgetLogic(QMainWindow):
         self.cur_ip_choose = self.ui.ip_com.currentText()
         self.cur_port = self.ui.port_input.text()
         self.cur_recv_data_list = []
-        self.data_dict = {
-            "s1":[],
-            "s2":[],
-            "s3":[],
-        }
+        self.data_dict = {key:[] for key in self.pic.curve_names}
+
 
     # 所有控件的初始化函数
     def widgets_init(self):

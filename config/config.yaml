@@ -1,0 +1,6 @@
+graph:
+  curve_num: 3
+  curve_names:
+    - ll1
+    - ll2
+    - ll3

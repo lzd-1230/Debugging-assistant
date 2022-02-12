@@ -1,28 +1,33 @@
 import pyqtgraph as pg
 import threading
 import time
+import yaml
 
 class Line_plot(threading.Thread):
     def __init__(self,widget):
         super().__init__()
+        self.win = widget
+        # 配置文件导入
+        self.load_yaml()
+        # 绘图部分初始化
+        self.graph_init()
         # 线程控制变量
         self.__flag = threading.Event()     # 用于暂停线程的标识
         self.__flag.set()       # 设置为True
         self.__running = threading.Event()      # 用于停止线程的标识
         self.__running.set()      # 将running设置为True
-        self.first_on = False
 
-        self.win = widget
+    def graph_init(self):
+        self.first_on = False
         self.new_data = False
         self.pic_list = []
         self.data_dict = dict()
         self.cur_x = 0
         self.on_click_regin = False 
-        name_list = ["l1","l2","l3"]
         pen_list = [
-            pg.mkPen(width=2,color="#ff7f0e"),
-            pg.mkPen(width=2,color="#2ca02c"),
-            pg.mkPen(width=2,color="#1f77b4"),
+            pg.mkPen(width=3,color="#ff7f0e"),
+            pg.mkPen(width=3,color="#2ca02c"),
+            pg.mkPen(width=3,color="#1f77b4"),
             pg.mkPen(widget=2,color="r"),
             pg.mkPen(widget=2,color="b"),
             pg.mkPen(widget=2,color="c"),
@@ -31,16 +36,19 @@ class Line_plot(threading.Thread):
         ]
 
         # 样式设置
-        self.win.setBackground('#707070')
+        self.win.setBackground('#1e1e1e')
         # 添加标签(标签也要占据行数)
         self.label = pg.LabelItem(justify='right')
-        self.win.addItem(self.label)
+        self.win.addItem(self.label,row=0,col=0)
+        self.layout = self.win.ci.layout
+        self.layout.setRowStretchFactor(1,3)
+        self.layout.setRowStretchFactor(2,1)
+
 
         # 创建画图区域
         self.p1 = self.win.addPlot(row=1,col=0)    # 返回一个PlotItem对象
         self.p2 = self.win.addPlot(row=2,col=0)
         self.p1.setAutoVisible(y=True)
-
 
         # 添加鼠标十字架
         self.vLine = pg.InfiniteLine(angle=90, movable=False)
@@ -55,8 +63,9 @@ class Line_plot(threading.Thread):
         
         # 当绘图的区域改变的时候
         self.p1.sigRangeChanged.connect(self.p2_regin_updata) # 当p1的rgn发生改变时会通知p2
-        for i in range(3):
-            self.pic_list.append(self.p1.plot(name=name_list[i],pen=pen_list[i]))
+        # 添加曲线
+        for i in range(self.curve_num):
+            self.pic_list.append(self.p1.plot(name=self.curve_names[i],pen=pen_list[i]))
 
         # p2区域绘图
         self.region = pg.LinearRegionItem()
@@ -66,6 +75,12 @@ class Line_plot(threading.Thread):
         self.region.setClipItem(self.p2_1)
         # 拖动框信号
         self.region.sigRegionChanged.connect(self.p1_regin_update)
+
+    def load_yaml(self):
+        with open("./config/config.yaml",mode="rt") as f:
+            self.config = yaml.safe_load(f)
+        self.curve_names = self.config["graph"]["curve_names"]
+        self.curve_num = self.config["graph"]["curve_num"]
 
     # 更新p1的range的槽函数
     def p1_regin_update(self):
@@ -85,7 +100,7 @@ class Line_plot(threading.Thread):
         if self.new_data:
             for idx,key in enumerate(self.data_dict):
                 self.pic_list[idx].setData(self.data_dict[key])
-                # self.pic_list[idx].setPos(self.cur_x,0)  # 上方视角不好设置...
+
                 # 用第一条曲线的数据对p2更新
                 if idx == 0:
                     self.p2_1.setData(self.data_dict[key])
