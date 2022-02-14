@@ -1,10 +1,12 @@
 graph:
-  curve_num: 5
+  curve_num: 5  # 曲线的数量
   curve_names:  # 曲线的名称
-    - ll1
-    - ll2
-    - ll3
-  attention_range: 50
+    - l1
+    - l2
+    - l3
+    - l4
+    - l5
+  attention_range: 50 # 专注显示的范围
   curve_color: # 曲线的颜色
     - "#ff7f0e"
     - "#2ca02c"

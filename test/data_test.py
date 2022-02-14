@@ -3,7 +3,6 @@ import time
 import random
 import struct
 
-
 def main():
     data_num = 5
     # 构造数据
@@ -24,7 +23,6 @@ def main():
     server_addr = (server_ip,server_port)
     
     tcp_client_socket.connect((server_ip,server_port))
-
 
 
     # 3.发送数据/接受数据

@@ -11,6 +11,6 @@ def get_iplist():
     hostname = socket.gethostname()
     # 拿到列表
     ip_list = socket.gethostbyname_ex(hostname)[2]
-    ip_list.append("0.0.0.0")
     ip_list.append("127.0.0.1")
+    ip_list.append("0.0.0.0")
     return ip_list

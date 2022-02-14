@@ -22,11 +22,11 @@ class WidgetLogic(QMainWindow):
     
     # 公共变量初始化
     def vars_init(self):
+        self.recv_data_on = True
+    
         self.cur_socket_mode = self.ui.socket_mode.currentText()
         self.cur_ip_choose = self.ui.ip_com.currentText()
         self.cur_port = self.ui.port_input.text()
-        self.cur_recv_data_list = []
-        
 
     # 所有控件的初始化函数
     def widgets_init(self):
@@ -35,17 +35,9 @@ class WidgetLogic(QMainWindow):
         self._text_edit_init()
     
     def _text_edit_init(self):
-        self.ui.port_input.textChanged.connect(self._get_addr)
-        self.ui.port_input.setText("8080")
+        self.ui.port_input.setText("8080")        
+        self.ui.socket_switch.setEnabled(True)
         
-    # 拿到最新输入的端口号
-    def _get_addr(self):
-        self.cur_ip_choose = self.ui.ip_com.currentText()
-        self.cur_port = self.ui.port_input.text()
-        # 只有拿到了端口号,才可以打开连接开关
-        if(self.cur_port):
-            self.ui.socket_switch.setEnabled(True)
-
     def _btn_init(self):
         # 默认开关不开
         self.ui.socket_switch.setEnabled(False)
@@ -58,10 +50,11 @@ class WidgetLogic(QMainWindow):
         ip_list = get_iplist()
         # 初始化下拉框内容
         self.ui.ip_com.addItems(ip_list)
-        self.ui.ip_com.setCurrentText("0.0.0.0")
+        self.ui.ip_com.setCurrentText(ip_list[0])
         self.ui.socket_mode.addItems(mode_list)
         # 初始化槽函数
-        self.ui.ip_com.currentIndexChanged.connect(self._get_addr)
+    
+
     
     def _clear_data(self): 
         self.pic.data_dict = {key:[] for key in self.pic.pic_dict}
@@ -74,22 +67,32 @@ class WidgetLogic(QMainWindow):
         print("清除数据")
 
 
+    # 接收数据开关槽函数
+    def recv_content_handle(self):
+        if(self.ui.recv_data_btn.isChecked() == True):
+            self.recv_data_on = True
+        else:
+            self.recv_data_on = False
+            print("停止接收数据")
+        
     # 负责将接收到的数据存储在对象属性中
     def recv_data(self,cur_data):
-        cur_data = cur_data.split(" ")
-        # 限制内存中储存的数据量
-        if(len(self.cur_recv_data_list) < 2000):
-            # self.cur_recv_data_list.append(int(float(cur_data)))
-            self.cur_recv_data_list.append(cur_data)
-        # 将每一列数据提取到字典中
-        for idx,key in enumerate(self.pic.pic_dict):
-            self.pic.data_dict[key].append(float(cur_data[idx]))
+        if self.recv_data_on:
+            cur_data = cur_data.split(" ")
+            
+            if(self.pic.cur_x<10000):
+                # 将每一列数据提取到字典中
+                for idx,key in enumerate(self.pic.pic_dict):
+                    self.pic.data_dict[key].append(float(cur_data[idx]))
+                self.pic.cur_x += 1
+            # 数据轮转
+            else:
+                pass
 
-        self.pic.cur_x += 1
-        # 给绘图类更新数据
-        self.pic.new_data = True
-        # 像文本框中写入内容
-        self.ui.socket_recv_show.append(str(cur_data))
+            # 给绘图类更新数据
+            self.pic.new_data = True
+            # 像文本框中写入内容
+            self.ui.socket_recv_show.append(str(cur_data))
 
     def save_recv_data(self):
         data = pd.DataFrame(self.pic.data_dict)

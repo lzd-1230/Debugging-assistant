@@ -3,6 +3,7 @@ from myWidget import WidgetLogic
 from Network import NetworkLogic
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QIcon,QFont
+from PyQt5.QtCore import pyqtSlot
 import utils.global_var as g
 from Network.stopThreading import stop_thread
 
@@ -14,16 +15,25 @@ class MainWindow(WidgetLogic,NetworkLogic,):
         self.ui.socket_switch.toggled.connect(self.socket_control_handler)
         self.ui.recv_data_btn.toggled.connect(self.recv_content_handle)
         self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler)
-        
-    # 接收数据槽函数
-    def recv_content_handle(self):
-        if(self.ui.recv_data_btn.isChecked() == True):
-            self.recv_data_on = True
-            print("开始接收数据")
-        else:
-            self.recv_data_on = False
-            print("停止接收数据")
-    
+        self.ui.port_input.textChanged.connect(self._get_addr)
+        self.ui.ip_com.currentTextChanged.connect(self._ip_com_change_handler)
+
+    @pyqtSlot(str)
+    def _ip_com_change_handler(self,cur_text):
+        g.set_var("listen_ip",cur_text)
+        self.get_addr()
+    # 将最新的地址写入公共变量字典
+    def _get_addr(self):
+        try:
+            g.set_var("listen_port",int(self.ui.port_input.text())) 
+            print(f"prot:{int(self.ui.port_input.text())}")
+        except TypeError:
+            print("输入正确类型的端口号")
+        # 只有拿到了端口号,才可以打开连接开关
+        if(self.ui.port_input.text()):
+            self.ui.socket_switch.setEnabled(True)
+        self.get_addr()
+
     # 画图开关槽函数
     def paint_switch_handler(self):
         if(self.ui.socket_paint_switch.isChecked() == True):
@@ -35,6 +45,7 @@ class MainWindow(WidgetLogic,NetworkLogic,):
         else:
             self.pic.pause()
             
+    
     # 控制socket的开关函数
     def socket_control_handler(self):
         # 开启连接

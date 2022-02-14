@@ -1,7 +1,10 @@
 """
 共享变量
 """
-share_vars = dict()
+share_vars = {
+    "listen_ip":"0.0.0.0",
+    "listen_port":8080
+}
 
 def _init():
     global share_vars

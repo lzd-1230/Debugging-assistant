@@ -91,10 +91,8 @@ class Line_plot(threading.Thread):
     def p1_regin_update(self):
         self.on_click_regin = True
         self.region.setZValue(10)
-        # 这个
         minX, maxX = self.region.getRegion()
         self.p1.setXRange(minX, maxX, padding=0)
-
         self.on_click_regin = False
 
     def p2_regin_updata(self,window,viewRange):
@@ -113,14 +111,13 @@ class Line_plot(threading.Thread):
                     
             # 设置下方拖动框跟随最前线
             if not self.on_click_regin:
-                
                 if self.cur_x > self.attention_range:
                     self.region.setRegion([self.cur_x-self.attention_range,self.cur_x])
                 else:
                     self.region.setRegion([0,self.cur_x])
             self.new_data = False
         else:
-            time.sleep(0.02) # !如果没有开启就睡眠,否则会占用大量资源
+            time.sleep(0.05) # !如果没有开启就睡眠,否则会占用大量资源
             
 
     # 这个函数没有反应

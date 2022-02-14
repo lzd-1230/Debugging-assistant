@@ -4,9 +4,12 @@ import time
 from Network.stopThreading import stop_thread
 import threading
 from PyQt5.QtCore import pyqtSignal,QObject
+import utils.global_var as g
+
 """
 tcp服务端的基本实现框架
 """
+
 class MyTcpServer():
     # 接收到数据的信号
     recv_content_signal = pyqtSignal(str)
@@ -14,10 +17,13 @@ class MyTcpServer():
         # ip和端口要自动获取,不能指定成参数
         self.clients_list = []
         # self.server_init()  # 要在main的类中启动
-        self.listen_ip = "0.0.0.0"
-        self.port = 8080
+
+    def get_addr(self):
+        self.listen_ip = g.get_var("listen_ip")
+        self.port = g.get_var("listen_port")
     # 初始化
     def server_init(self):
+        self.get_addr()
         self.server =  socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.setblocking(False)  # 设置非阻塞模式
