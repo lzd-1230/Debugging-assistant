@@ -1,4 +1,6 @@
 import sys
+import time
+import pandas as pd
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QIcon,QFont
@@ -24,8 +26,7 @@ class WidgetLogic(QMainWindow):
         self.cur_ip_choose = self.ui.ip_com.currentText()
         self.cur_port = self.ui.port_input.text()
         self.cur_recv_data_list = []
-        self.data_dict = {key:[] for key in self.pic.curve_names}
-
+        
 
     # 所有控件的初始化函数
     def widgets_init(self):
@@ -41,6 +42,7 @@ class WidgetLogic(QMainWindow):
     def _get_addr(self):
         self.cur_ip_choose = self.ui.ip_com.currentText()
         self.cur_port = self.ui.port_input.text()
+        # 只有拿到了端口号,才可以打开连接开关
         if(self.cur_port):
             self.ui.socket_switch.setEnabled(True)
 
@@ -48,9 +50,8 @@ class WidgetLogic(QMainWindow):
         # 默认开关不开
         self.ui.socket_switch.setEnabled(False)
         # 待完成
-        # self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler)
-        # self.save_socket_data.toggled.connect(save_data)
-        self.ui.clear_data_btn.toggled.connect(self._clear_data)
+        self.ui.save_socket_data.clicked.connect(self.save_recv_data)
+        self.ui.clear_socket_data.clicked.connect(self._clear_data)
 
     def _com_box_init(self):
         # 初始化当前的Ip列表
@@ -62,8 +63,16 @@ class WidgetLogic(QMainWindow):
         # 初始化槽函数
         self.ui.ip_com.currentIndexChanged.connect(self._get_addr)
     
-    def _clear_data(self):
-        self.cur_recv_data_lits = []
+    def _clear_data(self): 
+        self.pic.data_dict = {key:[] for key in self.pic.pic_dict}
+        # 绘图区数据清空
+        for idx,key in enumerate(self.pic.data_dict):
+            self.pic.pic_dict[key].clear()
+        self.pic.p2_1.setData([])
+        self.ui.socket_recv_show.clear()
+        self.pic.cur_x = 0
+        print("清除数据")
+
 
     # 负责将接收到的数据存储在对象属性中
     def recv_data(self,cur_data):
@@ -73,15 +82,24 @@ class WidgetLogic(QMainWindow):
             # self.cur_recv_data_list.append(int(float(cur_data)))
             self.cur_recv_data_list.append(cur_data)
         # 将每一列数据提取到字典中
-        for idx,key in enumerate(self.data_dict):
-            self.data_dict[key].append(float(cur_data[idx]))
+        for idx,key in enumerate(self.pic.pic_dict):
+            self.pic.data_dict[key].append(float(cur_data[idx]))
 
         self.pic.cur_x += 1
         # 给绘图类更新数据
         self.pic.new_data = True
-        self.pic.data_dict = self.data_dict # 替换最新字典
         # 像文本框中写入内容
         self.ui.socket_recv_show.append(str(cur_data))
+
+    def save_recv_data(self):
+        data = pd.DataFrame(self.pic.data_dict)
+        print(data)
+        time_prefix = time.strftime("%Y-%m-%d-%H-%M-%S")
+        with open("./data_save/"+time_prefix+".csv",mode="w",newline="") as f:
+            data.to_csv(f)
+
+        self.ui.socket_recv_show.append("数据保存成功")
+        print("保存数据成功")
 
 
 

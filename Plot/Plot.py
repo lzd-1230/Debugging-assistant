@@ -20,15 +20,13 @@ class Line_plot(threading.Thread):
     def graph_init(self):
         self.first_on = False
         self.new_data = False
-        self.pic_list = []
-        self.data_dict = dict()
+        self.pic_dict = {}
         self.cur_x = 0
         self.on_click_regin = False 
-        self.color_list = ["#ff7f0e","#2ca02c","#1f77b4"]
 
         pen_list = [
             pg.mkPen(width=3,color=self.color_list[i]) 
-            for i in range(len(self.curve_names))
+            for i in range(len(self.color_list))
         ]
 
         # 样式设置
@@ -43,6 +41,8 @@ class Line_plot(threading.Thread):
         # 创建画图区域
         self.p1 = self.win.addPlot(row=1,col=0)    # 返回一个PlotItem对象
         self.p2 = self.win.addPlot(row=2,col=0)
+        self.p2.hideAxis("left")
+        self.p2.hideAxis("bottom")
         self.p1.setAutoVisible(y=True)
 
         # 添加鼠标十字架
@@ -60,7 +60,14 @@ class Line_plot(threading.Thread):
         self.p1.sigRangeChanged.connect(self.p2_regin_updata) # 当p1的rgn发生改变时会通知p2
         # 添加曲线
         for i in range(self.curve_num):
-            self.pic_list.append(self.p1.plot(name=self.curve_names[i],pen=pen_list[i]))
+            try:
+                self.pic_dict[self.curve_names[i]] = self.p1.plot(name=self.curve_names[i],pen=pen_list[i])
+            except IndexError:
+                tmp = f'未命名{i}'
+                self.pic_dict[tmp] = self.p1.plot(name=tmp,pen=pen_list[i])
+        # 曲线数据字典初始化
+        self.data_dict = {key:[] for key in self.pic_dict}
+        
 
         # p2区域绘图
         self.region = pg.LinearRegionItem()
@@ -72,18 +79,22 @@ class Line_plot(threading.Thread):
         self.region.sigRegionChanged.connect(self.p1_regin_update)
 
     def load_yaml(self):
-        with open("./config/config.yaml",mode="rt") as f:
+        with open("./config/config.yaml",mode="rt",encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
         self.curve_names = self.config["graph"]["curve_names"]
         self.curve_num = self.config["graph"]["curve_num"]
+        self.attention_range = self.config["graph"]["attention_range"]
+        self.color_list = self.config["graph"]["curve_color"]
+
 
     # 更新p1的range的槽函数
     def p1_regin_update(self):
         self.on_click_regin = True
         self.region.setZValue(10)
+        # 这个
         minX, maxX = self.region.getRegion()
-        for pic in self.pic_list:
-            self.p1.setXRange(minX, maxX, padding=0)
+        self.p1.setXRange(minX, maxX, padding=0)
+
         self.on_click_regin = False
 
     def p2_regin_updata(self,window,viewRange):
@@ -94,7 +105,7 @@ class Line_plot(threading.Thread):
         # 假如开关并且有新数据
         if self.new_data:
             for idx,key in enumerate(self.data_dict):
-                self.pic_list[idx].setData(self.data_dict[key])
+                self.pic_dict[key].setData(self.data_dict[key])
 
                 # 用第一条曲线的数据对p2更新
                 if idx == 0:
@@ -103,8 +114,8 @@ class Line_plot(threading.Thread):
             # 设置下方拖动框跟随最前线
             if not self.on_click_regin:
                 
-                if self.cur_x > 100:
-                    self.region.setRegion([self.cur_x-100,self.cur_x])
+                if self.cur_x > self.attention_range:
+                    self.region.setRegion([self.cur_x-self.attention_range,self.cur_x])
                 else:
                     self.region.setRegion([0,self.cur_x])
             self.new_data = False
@@ -117,26 +128,23 @@ class Line_plot(threading.Thread):
         # 如果在p1的里面
         pos = evt[0]  # using signal proxy turns original arguments into a tuple
         if self.p1.sceneBoundingRect().contains(pos):
-            vb = self.p1.vb  # 拿到visualbox对象
-            mousePoint = vb.mapSceneToView(pos)  # 坐标映射到图像里的坐标 
-            res_text = self.get_stats_text(evt,mousePoint)
+            mousePoint = self.p1.vb.mapSceneToView(pos)  # 坐标映射到图像里的坐标 
+            res_text = self.get_stats_text(mousePoint)
             self.label.setText(res_text)
 
 
-    def get_stats_text(self,evt,mousePoint):
+    def get_stats_text(self,mousePoint):
         index = int(mousePoint.x())
         self.vLine.setPos(mousePoint.x())
         self.hLine.setPos(mousePoint.y())
-        x_text = f"<span style='font-size: 12pt'>x={mousePoint.x():.2} "
+        x_text = f"<span style='font-size: 12pt'>x={mousePoint.x():.2f} "
         tmp = ""
         if index > 0:
-            for idx,key in enumerate(self.curve_names):
+            for idx,key in enumerate(self.pic_dict):
                 color = self.color_list[idx]
                 data = self.data_dict[key][index]
                 tmp += f"<span style='color:{color}'>{key}={data}</span> "
         return x_text+tmp
-
-
 
         
     def run(self):

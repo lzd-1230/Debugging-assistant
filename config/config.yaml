@@ -1,6 +1,18 @@
 graph:
-  curve_num: 3
-  curve_names:
+  curve_num: 5
+  curve_names:  # 曲线的名称
     - ll1
     - ll2
     - ll3
+  attention_range: 50
+  curve_color: # 曲线的颜色
+    - "#ff7f0e"
+    - "#2ca02c"
+    - "#1f77b4"
+    - "#b22222"
+    - "#ffff00"
+    - "#ff1493"
+    - "#00bfbf"
+    - "#00bfff"
+    - "#7fffd4"
+    - "#32cd32"

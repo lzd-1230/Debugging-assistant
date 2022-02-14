@@ -59,10 +59,12 @@ class MyTcpServer():
                         self.recv_content_signal.emit(data) # 数据以元组形式传递
     # 关闭监听和所有连接
     def close_conect(self):
-
         for client,addr in self.clients_list:
-            client.shutdown(socket.SHUT_RDWR) # 关闭连接，并且不允许继续发送和接收
-            client.close()
+            try:
+                client.shutdown(socket.SHUT_RDWR) # 关闭连接，并且不允许继续发送和接收
+                client.close()
+            except ConnectionResetError:   # 客户端先关闭了
+                pass
         self.clients_list = [] # 将连接列表重置
 
         self.server.close() # 将服务端关闭

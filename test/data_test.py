@@ -5,17 +5,17 @@ import struct
 
 
 def main():
+    data_num = 5
     # 构造数据
     with open("./data.txt",mode="w") as f:
-        for i in range(333):
-            for i in range(3):
+        for i in range(2000):
+            for j in range(data_num): # 设置曲线量
                 data = round(1000*random.random(),2)
-                if(i<2):
+                if(j<data_num):
                     f.write(str(data)+" ")
                 else:
                     f.write(str(data))
-            if(i<9):
-                f.write("\n")
+            f.write("\n")
      # 1.创建TCP套接字
     tcp_client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)  # tcp套接字
     # 2.连接服务器
