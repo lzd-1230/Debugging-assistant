@@ -79,7 +79,6 @@ class WidgetLogic(QMainWindow):
     def recv_data(self,cur_data):
         if self.recv_data_on:
             cur_data = cur_data.split(" ")
-            
             if(self.pic.cur_x<10000):
                 # 将每一列数据提取到字典中
                 for idx,key in enumerate(self.pic.pic_dict):
