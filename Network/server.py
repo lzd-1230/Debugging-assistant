@@ -12,7 +12,7 @@ tcp服务端的基本实现框架
 
 class MyTcpServer():
     # 接收到数据的信号
-    recv_content_signal = pyqtSignal(str)
+    socket_recv_content_signal = pyqtSignal(str)
     def __init__(self) -> None:
         # ip和端口要自动获取,不能指定成参数
         self.clients_list = []
@@ -62,7 +62,7 @@ class MyTcpServer():
                 else:
                     if recv_data:
                         data = recv_data.decode("utf-8")
-                        self.recv_content_signal.emit(data) # 数据以元组形式传递
+                        self.socket_recv_content_signal.emit(data) # 数据以元组形式传递
     # 关闭监听和所有连接
     def close_conect(self):
         for client,addr in self.clients_list:

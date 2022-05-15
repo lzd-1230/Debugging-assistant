@@ -3,19 +3,21 @@ import threading
 import time
 import yaml
 
+# 折线绘图类
 class Line_plot(threading.Thread):
     def __init__(self,widget):
         super().__init__()
-        self.win = widget
+        self.win = widget  # 拿到widget
+
         # 配置文件导入
         self.load_yaml()
         # 绘图部分初始化
         self.graph_init()
         # 线程控制变量
         self.__flag = threading.Event()     # 用于暂停线程的标识
-        self.__flag.set()       # 设置为True
-        self.__running = threading.Event()      # 用于停止线程的标识
-        self.__running.set()      # 将running设置为True
+        self.__flag.set()                   # 设置为True
+        self.__running = threading.Event()  # 用于停止线程的标识
+        self.__running.set()                # 将running设置为True
 
     def graph_init(self):
         self.first_on = False
@@ -24,7 +26,7 @@ class Line_plot(threading.Thread):
         self.cur_x = 0
         self.on_click_regin = False 
 
-        pen_list = [
+        self.pen_list = [
             pg.mkPen(width=3,color=self.color_list[i]) 
             for i in range(len(self.color_list))
         ]
@@ -61,22 +63,48 @@ class Line_plot(threading.Thread):
         # 添加曲线
         for i in range(self.curve_num):
             try:
-                self.pic_dict[self.curve_names[i]] = self.p1.plot(name=self.curve_names[i],pen=pen_list[i])
+                self.pic_dict[self.curve_names[i]] = self.p1.plot(name=self.curve_names[i],pen=self.pen_list[i])
             except IndexError:
                 tmp = f'未命名{i}'
-                self.pic_dict[tmp] = self.p1.plot(name=tmp,pen=pen_list[i])
+                self.pic_dict[tmp] = self.p1.plot(name=tmp,pen=self.pen_list[i])
         # 曲线数据字典初始化
         self.data_dict = {key:[] for key in self.pic_dict}
-        
 
         # p2区域绘图
         self.region = pg.LinearRegionItem()
         self.region.setZValue(10)
         self.p2.addItem(self.region,ignoreBounds=True)
-        self.p2_1 = self.p2.plot(pen=pen_list[0])
+        self.p2_1 = self.p2.plot(pen=self.pen_list[0])
         self.region.setClipItem(self.p2_1)
         # 拖动框信号
         self.region.sigRegionChanged.connect(self.p1_regin_update)
+
+
+    def reconfig_curve(self):
+        self.p1.addLegend()
+        self.p1.setAutoVisible(y=True)
+        # 当绘图的区域改变的时候
+        self.p1.sigRangeChanged.connect(self.p2_regin_updata) # 当p1的rgn发生改变时会通知p2
+        self.pic_dict = {}
+        # 添加曲线
+        for i in range(self.curve_num):
+            try:
+                self.pic_dict[self.curve_names[i]] = self.p1.plot(name=self.curve_names[i],pen=self.pen_list[i])
+            except IndexError:
+                tmp = f'未命名{i}'
+                self.pic_dict[tmp] = self.p1.plot(name=tmp,pen=self.pen_list[i])
+        # 曲线数据字典初始化
+        self.data_dict = {key:[] for key in self.pic_dict}
+        
+        # p2区域绘图
+        self.region = pg.LinearRegionItem()
+        self.region.setZValue(10)
+        self.p2.addItem(self.region,ignoreBounds=True)
+        self.p2_1 = self.p2.plot(pen=self.pen_list[0])
+        self.region.setClipItem(self.p2_1)
+        # 拖动框信号
+        self.region.sigRegionChanged.connect(self.p1_regin_update)
+
 
     def load_yaml(self):
         with open("./config/config.yaml",mode="rt",encoding="utf-8") as f:
@@ -86,7 +114,6 @@ class Line_plot(threading.Thread):
         self.attention_range = self.config["graph"]["attention_range"]
         self.color_list = self.config["graph"]["curve_color"]
 
-
     # 更新p1的range的槽函数
     def p1_regin_update(self):
         self.on_click_regin = True
@@ -95,6 +122,7 @@ class Line_plot(threading.Thread):
         self.p1.setXRange(minX, maxX, padding=0)
         self.on_click_regin = False
 
+    # 更新p2的range的槽函数
     def p2_regin_updata(self,window,viewRange):
         self.region.setRegion(viewRange[0])
 
@@ -119,18 +147,17 @@ class Line_plot(threading.Thread):
         else:
             time.sleep(0.05) # !如果没有开启就睡眠,否则会占用大量资源
             
-
-    # 这个函数没有反应
+    # 鼠标移动更新显示值
     def mouseMoved(self,evt):
         # 如果在p1的里面
         pos = evt[0]  # using signal proxy turns original arguments into a tuple
         if self.p1.sceneBoundingRect().contains(pos):
             mousePoint = self.p1.vb.mapSceneToView(pos)  # 坐标映射到图像里的坐标 
-            res_text = self.get_stats_text(mousePoint)
+            res_text = self.__get_stats_text(mousePoint)
             self.label.setText(res_text)
 
-
-    def get_stats_text(self,mousePoint):
+    # 拿到鼠标对应坐标位置
+    def __get_stats_text(self,mousePoint):
         index = int(mousePoint.x())
         self.vLine.setPos(mousePoint.x())
         self.hLine.setPos(mousePoint.y())
@@ -143,15 +170,19 @@ class Line_plot(threading.Thread):
                 tmp += f"<span style='color:{color}'>{key}={data}</span> "
         return x_text+tmp
 
-        
+
+    # 线程入口!
     def run(self):
         while self.__running.isSet():
             self.__flag.wait()
             self.plot()
+
     def stop(self):
-        self.__running.clear()
+        self.__running.clear() 
+
     def pause(self):
-        self.__flag.clear()
+        self.__flag.clear() 
+    
     def resume(self):
         self.__flag.set()
         

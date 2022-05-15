@@ -6,21 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
-    <height>424</height>
+    <width>440</width>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="Mainwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="socket_tab">
        <attribute name="title">
         <string>网络模式</string>
        </attribute>
@@ -242,31 +242,40 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="uart_tab">
        <attribute name="title">
         <string>串口模式</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="8,1">
+       <layout class="QGridLayout" name="gridLayout_7" rowstretch="7,1">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="6,1">
           <item>
-           <widget class="QGraphicsView" name="my_graph"/>
+           <widget class="GraphicsLayoutWidget" name="serial_graph"/>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
-              <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="text">
                  <string>串口选择</string>
                 </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
                </widget>
               </item>
-              <item>
-               <widget class="QComboBox" name="box_com"/>
+              <item row="1" column="0">
+               <widget class="QComboBox" name="uart_com"/>
               </item>
-              <item>
+              <item row="2" column="0">
                <widget class="QLabel" name="label">
                 <property name="text">
                  <string>波特率</string>
@@ -279,36 +288,31 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QComboBox" name="box_baud"/>
+              <item row="3" column="0">
+               <widget class="QComboBox" name="baud_boxcom"/>
               </item>
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
-              <item>
-               <widget class="QRadioButton" name="open_com_btn">
-                <property name="text">
-                 <string>打开串口</string>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>30</width>
-                  <height>30</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="com_paint_switch">
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="uart_paint_switch">
                 <property name="text">
                  <string>绘制图像</string>
                 </property>
-                <property name="iconSize">
-                 <size>
-                  <width>30</width>
-                  <height>30</height>
-                 </size>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="com_switch">
+                <property name="text">
+                 <string>打开串口</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="uart_config_btn">
+                <property name="text">
+                 <string>更多配置</string>
                 </property>
                </widget>
               </item>
@@ -318,21 +322,51 @@
           </item>
          </layout>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="6,1">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
           <item>
-           <widget class="QTextEdit" name="recv_browser"/>
+           <widget class="QTextEdit" name="uart_recv_show"/>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <property name="horizontalSpacing">
+             <number>0</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>6</number>
+            </property>
+            <item row="0" column="0">
              <widget class="QPushButton" name="save_data_btn">
+              <property name="minimumSize">
+               <size>
+                <width>7</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>保存数据</string>
               </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="0">
              <widget class="QPushButton" name="clear_data_btn">
               <property name="text">
                <string>清空数据</string>
@@ -354,7 +388,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>581</width>
+     <width>440</width>
      <height>22</height>
     </rect>
    </property>
@@ -376,7 +410,7 @@
   <customwidget>
    <class>GraphicsLayoutWidget</class>
    <extends>QGraphicsView</extends>
-   <header>pyqtgraph</header>
+   <header location="global">pyqtgraph</header>
   </customwidget>
  </customwidgets>
  <resources/>

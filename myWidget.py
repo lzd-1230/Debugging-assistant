@@ -18,15 +18,17 @@ class WidgetLogic(QMainWindow):
         self.cur_mode = 0      # 状态未连接
         self.widgets_init()
         self.pic = Line_plot(self.ui.socket_graph)
+        self.pic_uart = Line_plot(self.ui.serial_graph)
         self.vars_init()
+
     
     # 公共变量初始化
     def vars_init(self):
         self.recv_data_on = True
-    
         self.cur_socket_mode = self.ui.socket_mode.currentText()
         self.cur_ip_choose = self.ui.ip_com.currentText()
         self.cur_port = self.ui.port_input.text()
+        self.uart_paint_recv = False
 
     # 所有控件的初始化函数
     def widgets_init(self):
@@ -46,15 +48,20 @@ class WidgetLogic(QMainWindow):
         self.ui.clear_socket_data.clicked.connect(self._clear_data)
 
     def _com_box_init(self):
-        # 初始化当前的Ip列表
-        ip_list = get_iplist()
-        # 初始化下拉框内容
-        self.ui.ip_com.addItems(ip_list)
-        self.ui.ip_com.setCurrentText(ip_list[0])
-        self.ui.socket_mode.addItems(mode_list)
-        # 初始化槽函数
-    
-
+        # 区分是socket还是uart的初始化!
+        if(self.ui.tabWidget.currentWidget == "socket_tab"):
+            ip_list = get_iplist()
+            # 初始化下拉框内容
+            self.ui.ip_com.addItems(ip_list)
+            self.ui.ip_com.setCurrentText(ip_list[0])
+            self.ui.socket_mode.addItems(mode_list)
+        else:
+            com_list = get_coms()
+            self.ui.uart_com.addItems(com_list)
+            baud_list = get_bauds()
+            self.ui.baud_boxcom.addItems(baud_list)
+            self.ui.baud_boxcom.setCurrentText("115200")
+            g.set_var("baudrate","115200")
     
     def _clear_data(self): 
         self.pic.data_dict = {key:[] for key in self.pic.pic_dict}
@@ -76,7 +83,7 @@ class WidgetLogic(QMainWindow):
             print("停止接收数据")
         
     # 负责将接收到的数据存储在对象属性中
-    def recv_data(self,cur_data):
+    def socket_recv_data(self,cur_data):
         if self.recv_data_on:
             cur_data = cur_data.split(" ")
             if(self.pic.cur_x<10000):
@@ -87,11 +94,24 @@ class WidgetLogic(QMainWindow):
             # 数据轮转
             else:
                 pass
-
             # 给绘图类更新数据
             self.pic.new_data = True
             # 像文本框中写入内容
             self.ui.socket_recv_show.append(str(cur_data))
+
+    # 串口接收数据的回调函数
+    def uart_recv_data(self,cur_data:bytes):
+        cur_data = cur_data.decode(encoding="utf8",errors="ignore")
+        cur_data = cur_data.split(" ")
+        if(self.uart_paint_recv):
+            for idx,key in enumerate(self.pic_uart.pic_dict):
+                self.pic_uart.data_dict[key].append(float(cur_data[idx]))
+            self.pic_uart.cur_x += 1
+            self.pic_uart.new_data = True
+
+        # 将数据赋值到写的窗口
+        self.ui.uart_recv_show.append(str(cur_data))
+
 
     def save_recv_data(self):
         data = pd.DataFrame(self.pic.data_dict)

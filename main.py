@@ -1,27 +1,78 @@
 import sys
 from myWidget import WidgetLogic
 from Network import NetworkLogic
-from PyQt5.QtWidgets import QApplication,QMainWindow
+from uart import UartLogic
+from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog
 from PyQt5.QtGui import QIcon,QFont
 from PyQt5.QtCore import pyqtSlot
 import utils.global_var as g
 from Network.stopThreading import stop_thread
+from ui_ConfigDialog import Ui_Dialog
+import time
+import asyncio
+from dialogs.uart_config_dialog import Uart_Config_dialog
 
-class MainWindow(WidgetLogic,NetworkLogic,):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        # 信号量初始化
-        self.recv_content_signal.connect(self.recv_data)
-        self.ui.socket_switch.toggled.connect(self.socket_control_handler)
-        self.ui.recv_data_btn.toggled.connect(self.recv_content_handle)
-        self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler)
+
+class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
+    def __init__(self,app,loop,parent=None):
+        super().__init__(parent)   # 这里是WidgetLogic的初始化函数
+        self.app = app
+        self.loop = loop
+        # 不同类的方法属性绑定
+        self.socket_recv_content_signal.connect(self.socket_recv_data)  # NetworkLogic类的类属性
+        self.uart_recv_content_signal.connect(self.uart_recv_data)
+        
+        self.ui.uart_config_btn.clicked.connect(self.uart_dialog_raise)
+
+        self.ui.socket_switch.toggled.connect(self.socket_control_handler) # WidgetLogic类的方法
+        self.ui.com_switch.toggled.connect(self.com_control_handler)
+        self.ui.recv_data_btn.toggled.connect(self.recv_content_handle) # designer中的属性
+        self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler) # 自己的逻辑函数
+        self.ui.uart_paint_switch.toggled.connect(self.uart_paint_switch_handler)
+        
         self.ui.port_input.textChanged.connect(self._get_addr)
         self.ui.ip_com.currentTextChanged.connect(self._ip_com_change_handler)
+        self.ui.uart_com.currentTextChanged.connect(self._uart_port_change_handler)
+        self.ui.baud_boxcom.currentTextChanged.connect(self._baud_change_handler)
 
-    @pyqtSlot(str)
+    # ip端口改变的槽函数
+    @pyqtSlot(str)  
     def _ip_com_change_handler(self,cur_text):
-        g.set_var("listen_ip",cur_text)
+        g.set_var("listen_ip",cur_text)  # 公共变量设置
         self.get_addr()
+    
+    @pyqtSlot(str) 
+    def _uart_port_change_handler(self,cur_text):
+        g.set_var("uart_port",cur_text)
+        self.get_uart_info()
+    
+    @pyqtSlot(str)
+    def _baud_change_handler(self,cur_text):
+        g.set_var("baudrate",int(cur_text))
+        self.get_uart_info()
+
+    # 串口参数修改对话框
+    def uart_dialog_raise(self):
+        dialog = Uart_Config_dialog()
+        # 初值获取
+        curve_num = self.pic_uart.curve_num
+        attention_range = self.pic_uart.attention_range
+
+        dialog.set_init_val(attention_range=attention_range,
+                            curve_num=curve_num,
+                            )
+
+        res = dialog.exec()
+        if(res == QDialog.DialogCode.Accepted):
+            ret = dialog.close_return()
+            # 完成数据的赋值
+            # print(f"attention_range{ret[0]}")
+            # print(f"attention_range{ret[1]}")
+            self.pic_uart.attention_range = ret[0] 
+            self.pic_uart.curve_num = ret[1]
+            self.pic_uart.p1.clear()    # 清除所有
+            self.pic_uart.reconfig_curve()  # 重新初始化(其实只用初始化一部分就可以了)
+
     # 将最新的地址写入公共变量字典
     def _get_addr(self):
         try:
@@ -34,7 +85,7 @@ class MainWindow(WidgetLogic,NetworkLogic,):
             self.ui.socket_switch.setEnabled(True)
         self.get_addr()
 
-    # 画图开关槽函数
+    # socket画图开关槽函数(和com口的基本重复)
     def paint_switch_handler(self):
         if(self.ui.socket_paint_switch.isChecked() == True):
             if not self.pic.first_on:
@@ -45,44 +96,91 @@ class MainWindow(WidgetLogic,NetworkLogic,):
         else:
             self.pic.pause()
             
-    
     # 控制socket的开关函数
     def socket_control_handler(self):
         # 开启连接
         if self.ui.socket_switch.isChecked() == True:
             # 首先判断当前模式
             if self.cur_socket_mode == "Tcp_Server":
-                print("进入tcpserver模式")
+                # 变量初始化
                 self.cur_mode = 1
                 g.set_var("socket_status",True)
                 self.port = int(self.cur_port)
                 self.listen_ip = self.cur_ip_choose
+
                 self.server_init() # socket服务端监听线程
         # 关闭连接
         else:
             g.set_var("socket_status",False)
             # 关闭服务端监听和连接
             self.close_conect()
+    
+    # uart画图开关槽函数
+    def uart_paint_switch_handler(self):
+        if(self.ui.uart_paint_switch.isChecked() == True):
+            self.uart_paint_recv = True
+            self.ui.uart_com.setEnabled(False)
+            self.ui.baud_boxcom.setEnabled(False)
+            if(not self.pic_uart.first_on):
+                self.pic_uart.first_on = True
+                self.pic_uart.start()
+            else:
+                self.pic_uart.resume()
+        else:
+            self.uart_paint_recv = False
+            self.ui.uart_com.setEnabled(True)
+            self.ui.baud_boxcom.setEnabled(True)
+            self.pic_uart.pause()
+
+    # 控制串口开关的函数
+    def com_control_handler(self):
+        if self.ui.com_switch.isChecked() == True:
+            g.set_var("com_status",True)
+            self.com_init()
+
+        else:
+            print("串口关闭!")
+            g.set_var("com_status",False)
+
+            
     # 全局退出
     def closeEvent(self, event) -> None:
         """
         重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
         :param event: close()触发的事件
         """
-        self.pic.stop()
+        # 如果画图线程启动了之后,在主线程关闭后,子线程不需要手动关闭?
+        
+        print("全局退出函数")
+        # self.loop.close()
+        # self.pic.stop()
+        self.pic_uart.stop()
         if(self.cur_mode == 1):
             self.close_conect()
 
+        # 退出事件循环!
+        if(self.loop.is_running()):
+            self.loop.stop()
+            self.loop.close() 
+        sys.exit()  # 直接让线程退出,这样事件循环就推出了!
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    from quamash import QEventLoop
+    loop = QEventLoop(app)
     icon = QIcon(":/icons/image/关闭小.png")
     app.setWindowIcon(icon)
+
     font = QFont("Microsoft YaHei")
     app.setFont(font)
+
     # 设置qss样式
     with open("./style.qss") as f:
         qss = f.read()       
         app.setStyleSheet(qss)
-    win = MainWindow()
-    win.show()
-    sys.exit(app.exec_()) 
+
+    win = MainWindow(app,loop)
+    with loop:
+        win.show()
+        loop.run_forever()
