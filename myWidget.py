@@ -20,7 +20,6 @@ class WidgetLogic(QMainWindow):
         self.pic = Line_plot(self.ui.socket_graph)
         self.pic_uart = Line_plot(self.ui.serial_graph)
         self.vars_init()
-
     
     # 公共变量初始化
     def vars_init(self):
@@ -44,8 +43,11 @@ class WidgetLogic(QMainWindow):
         # 默认开关不开
         self.ui.socket_switch.setEnabled(False)
         # 待完成
-        self.ui.save_socket_data.clicked.connect(self.save_recv_data)
-        self.ui.clear_socket_data.clicked.connect(self._clear_data)
+        self.ui.save_socket_data.clicked.connect(self.save_socket_recv_data)
+        self.ui.save_uart_data_btn.clicked.connect(self.save_uart_recv_data)
+        self.ui.clear_socket_data.clicked.connect(self._clear_socket_data)
+        self.ui.clear_uart_data.clicked.connect(self._clear_uart_data)
+
 
     def _com_box_init(self):
         # 区分是socket还是uart的初始化!
@@ -63,7 +65,7 @@ class WidgetLogic(QMainWindow):
             self.ui.baud_boxcom.setCurrentText("115200")
             g.set_var("baudrate","115200")
     
-    def _clear_data(self): 
+    def _clear_socket_data(self): 
         self.pic.data_dict = {key:[] for key in self.pic.pic_dict}
         # 绘图区数据清空
         for idx,key in enumerate(self.pic.data_dict):
@@ -73,6 +75,15 @@ class WidgetLogic(QMainWindow):
         self.pic.cur_x = 0
         print("清除数据")
 
+    def _clear_uart_data(self):
+        self.pic_uart.data_dict = {key:[] for key in self.pic_uart.pic_dict}
+        # 绘图区数据清空
+        for idx,key in enumerate(self.pic_uart.data_dict):
+            self.pic_uart.pic_dict[key].clear()
+        self.pic_uart.p2_1.setData([])
+        self.ui.uart_recv_show.clear()
+        self.pic_uart.cur_x = 0
+        print("清除数据")
 
     # 接收数据开关槽函数
     def recv_content_handle(self):
@@ -112,16 +123,24 @@ class WidgetLogic(QMainWindow):
         # 将数据赋值到写的窗口
         self.ui.uart_recv_show.append(str(cur_data))
 
-
-    def save_recv_data(self):
+    # 保存socket接收的数据
+    def save_socket_recv_data(self):
         data = pd.DataFrame(self.pic.data_dict)
-        print(data)
         time_prefix = time.strftime("%Y-%m-%d-%H-%M-%S")
-        with open("./data_save/"+time_prefix+".csv",mode="w",newline="") as f:
+        with open("./data_save/"+time_prefix+"_socket"+".csv",mode="w",newline="") as f:
             data.to_csv(f)
 
         self.ui.socket_recv_show.append("数据保存成功")
         print("保存数据成功")
+    
+    def save_uart_recv_data(self):
+        data = pd.DataFrame(self.pic_uart.data_dict)
+        time_prefix = time.strftime("%Y-%m-%d-%H-%M-%S")
+        with open("./data_save/"+time_prefix+"_uart"+".csv",mode="w",newline="") as f:
+            data.to_csv(f)
+        self.ui.socket_recv_show.append("数据保存成功")
+        print("保存数据成功")
+
 
 
 

@@ -119,8 +119,7 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     def uart_paint_switch_handler(self):
         if(self.ui.uart_paint_switch.isChecked() == True):
             self.uart_paint_recv = True
-            self.ui.uart_com.setEnabled(False)
-            self.ui.baud_boxcom.setEnabled(False)
+            # 判断是开启还是继续
             if(not self.pic_uart.first_on):
                 self.pic_uart.first_on = True
                 self.pic_uart.start()
@@ -135,13 +134,16 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     # 控制串口开关的函数
     def com_control_handler(self):
         if self.ui.com_switch.isChecked() == True:
+            self.ui.uart_com.setEnabled(False)
+            self.ui.baud_boxcom.setEnabled(False)
             g.set_var("com_status",True)
-            self.com_init()
-
+            self.com_init(self.loop)
         else:
+            self.ui.uart_com.setEnabled(True)
+            self.ui.baud_boxcom.setEnabled(True)
             print("串口关闭!")
             g.set_var("com_status",False)
-
+            self.serial.close()  # 暴力关闭,让协程结束!
             
     # 全局退出
     def closeEvent(self, event) -> None:
@@ -152,26 +154,37 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
         # 如果画图线程启动了之后,在主线程关闭后,子线程不需要手动关闭?
         
         print("全局退出函数")
-        # self.loop.close()
-        # self.pic.stop()
-        self.pic_uart.stop()
+        if(self.ui.uart_paint_switch.isChecked()):
+            print("do pic_uart stop")
+            # self.pic_uart.resume()
+            self.pic_uart.stop()
+        
+        if(self.ui.socket_paint_switch.isChecked()):
+            print("do pic stop")
+            self.pic.stop()
+
         if(self.cur_mode == 1):
             self.close_conect()
 
         # 退出事件循环!
-        if(self.loop.is_running()):
-            self.loop.stop()
-            self.loop.close() 
-        sys.exit()  # 直接让线程退出,这样事件循环就推出了!
+        # if(self.loop.is_running()):
+       
+        self.serial.close()  # 它会自动帮我们判断
+        print("loop is running")
+        self.loop.stop()
+        self.loop.close() 
+        print(f'loop is closed:{self.loop.is_closed()}')
+        sys.exit()   # 直接让线程退出,这样事件循环就退出了???并没有...
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     from quamash import QEventLoop
     loop = QEventLoop(app)
+    print(id(loop))
+    
     icon = QIcon(":/icons/image/关闭小.png")
     app.setWindowIcon(icon)
-
     font = QFont("Microsoft YaHei")
     app.setFont(font)
 
@@ -181,6 +194,6 @@ if __name__ == "__main__":
         app.setStyleSheet(qss)
 
     win = MainWindow(app,loop)
-    with loop:
-        win.show()
-        loop.run_forever()
+    win.show()
+    print("run the loop")
+    sys.exit(app.exec_())

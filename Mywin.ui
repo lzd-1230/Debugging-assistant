@@ -339,7 +339,7 @@
              <number>6</number>
             </property>
             <item row="0" column="0">
-             <widget class="QPushButton" name="save_data_btn">
+             <widget class="QPushButton" name="save_uart_data_btn">
               <property name="minimumSize">
                <size>
                 <width>7</width>
@@ -367,7 +367,7 @@
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QPushButton" name="clear_data_btn">
+             <widget class="QPushButton" name="clear_uart_data">
               <property name="text">
                <string>清空数据</string>
               </property>

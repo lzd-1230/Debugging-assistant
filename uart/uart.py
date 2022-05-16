@@ -7,6 +7,7 @@ import aioserial
 import struct
 from quamash import QEventLoop
 from PyQt5.QtCore import pyqtSignal
+from serial.serialutil import PortNotOpenError
 
 class Uart():
     uart_recv_content_signal = pyqtSignal(bytes) # 收到数据的信号
@@ -19,39 +20,51 @@ class Uart():
         self.baudrate = g.get_var("baudrate")
 
     # 开启串口
-    def com_init(self):
+    def com_init(self,loop):
         self.get_uart_info()
-        self.loop = QEventLoop()
+        self.loop = loop
+        print(f"创建串口任务之前事件循环已经开始{self.loop.is_running()}")
         asyncio.set_event_loop(self.loop) 
-        self.serial = aioserial.AioSerial(port=self.port, baudrate=self.baudrate,loop=self.loop ,parity='N', stopbits=1, timeout=None, xonxoff=False, rtscts=False) 
-        
-        print("串口打开")
-        print(f"current port:{self.port} cur baudrate:{self.baudrate}")
-        self.loop.create_task(self.start_com()) # 往里面提交任务
-            
+        self.serial = aioserial.AioSerial(port=self.port, baudrate=self.baudrate,loop=self.loop) 
+        print(f"open current port:{self.port} cur baudrate:{self.baudrate}")
+        self.listen_task = self.loop.create_task(self.start_com()) # 往里面提交任务
+
     async def read_and_print(self,aioserial_instance: aioserial.AioSerial):
-        while g.get_var("com_status"):
-            data_len_b: bytes = await aioserial_instance.read_async(2)
-            # print(f"原始:{data_len_b}")
+        while True:
+            if(not g.get_var("com_status")):
+                print("enter close")
+                aioserial_instance.close()
+                break
+            try:
+                data_len_b: bytes = await aioserial_instance.read_async(2)
+            except PortNotOpenError as e:
+                break
+
             data_len = data_len_b.decode()
-            # print(f"长度位:{data_len}")
             # 读掉后面的回车!
             _ = None
             while(_ != b'\n'):
-                _ = await aioserial_instance.read_async()# win下的换行是\r\n两个字节
-
-            data =  await aioserial_instance.read_async(int(data_len))
+                try:
+                    _ = await aioserial_instance.read_async()# win下的换行是\r\n两个字节
+                except PortNotOpenError as e:
+                    break
+            try:
+                print(data_len)
+                data =  await aioserial_instance.read_async(int(data_len))
+            except PortNotOpenError as e:
+                break
             print(f"数据:{data}")
     
             _ = ""
-
-            # print(f"second round :{_}")
             while(_ != b'\n'):
-                _ = await aioserial_instance.read_async()
+                try:
+                    _ = await aioserial_instance.read_async()
+                except PortNotOpenError as e:
+                    break
             
-            print(f"second round:{_}")
             if(data):
                 self.uart_recv_content_signal.emit(data)
+      
 
     async def start_com(self):
         coro = self.read_and_print(self.serial)

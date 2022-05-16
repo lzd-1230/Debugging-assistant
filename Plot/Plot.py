@@ -13,7 +13,8 @@ class Line_plot(threading.Thread):
         self.load_yaml()
         # 绘图部分初始化
         self.graph_init()
-        # 线程控制变量
+
+        # 线程控制变量!!
         self.__flag = threading.Event()     # 用于暂停线程的标识
         self.__flag.set()                   # 设置为True
         self.__running = threading.Event()  # 用于停止线程的标识
@@ -79,7 +80,7 @@ class Line_plot(threading.Thread):
         # 拖动框信号
         self.region.sigRegionChanged.connect(self.p1_regin_update)
 
-
+    # 当在配置对话框完成配置后重置图窗
     def reconfig_curve(self):
         self.p1.addLegend()
         self.p1.setAutoVisible(y=True)
@@ -95,16 +96,13 @@ class Line_plot(threading.Thread):
                 self.pic_dict[tmp] = self.p1.plot(name=tmp,pen=self.pen_list[i])
         # 曲线数据字典初始化
         self.data_dict = {key:[] for key in self.pic_dict}
-        
-        # p2区域绘图
-        self.region = pg.LinearRegionItem()
-        self.region.setZValue(10)
-        self.p2.addItem(self.region,ignoreBounds=True)
-        self.p2_1 = self.p2.plot(pen=self.pen_list[0])
-        self.region.setClipItem(self.p2_1)
-        # 拖动框信号
-        self.region.sigRegionChanged.connect(self.p1_regin_update)
 
+        self.vLine = pg.InfiniteLine(angle=90, movable=False)
+        self.hLine = pg.InfiniteLine(angle=0, movable=False)
+        self.p1.addItem(self.vLine, ignoreBounds=True)
+        self.p1.addItem(self.hLine, ignoreBounds=True)
+        self.proxy = pg.SignalProxy(self.p1.scene().sigMouseMoved,rateLimit=60, slot=self.mouseMoved)
+    
 
     def load_yaml(self):
         with open("./config/config.yaml",mode="rt",encoding="utf-8") as f:
@@ -174,15 +172,15 @@ class Line_plot(threading.Thread):
     # 线程入口!
     def run(self):
         while self.__running.isSet():
-            self.__flag.wait()
+            self.__flag.wait()  # 如果__flag标识不是true就阻塞在这里!
             self.plot()
 
     def stop(self):
-        self.__running.clear() 
+        self.__running.clear()  # __running标识去掉后,线程结束
 
     def pause(self):
-        self.__flag.clear() 
+        self.__flag.clear()  # __flag==False后会阻塞线程
     
     def resume(self):
-        self.__flag.set()
+        self.__flag.set()  # __flag==True后,线程解阻塞
         

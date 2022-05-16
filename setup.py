@@ -4,9 +4,9 @@ from PyInstaller.__main__ import run
 import sys
  
 if __name__ == '__main__':
-    sys.setrecursionlimit(10000)
+    sys.setrecursionlimit(1000)
     opts = ['-F',
-            # '-w',
+            '-w',
             '-y',
             # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\bin',
             # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\plugins',
