@@ -133,6 +133,7 @@ class WidgetLogic(QMainWindow):
         self.ui.socket_recv_show.append("数据保存成功")
         print("保存数据成功")
     
+    # path
     def save_uart_recv_data(self):
         data = pd.DataFrame(self.pic_uart.data_dict)
         time_prefix = time.strftime("%Y-%m-%d-%H-%M-%S")

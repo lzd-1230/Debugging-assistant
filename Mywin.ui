@@ -295,7 +295,21 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QPushButton" name="uart_config_btn">
+                <property name="text">
+                 <string>更多配置</string>
+                </property>
+               </widget>
+              </item>
               <item row="2" column="0">
+               <widget class="QCheckBox" name="com_switch">
+                <property name="text">
+                 <string>打开串口</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
                <widget class="QCheckBox" name="uart_paint_switch">
                 <property name="text">
                  <string>绘制图像</string>
@@ -303,16 +317,9 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QCheckBox" name="com_switch">
+               <widget class="QPushButton" name="data_show_dialog">
                 <property name="text">
-                 <string>打开串口</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="uart_config_btn">
-                <property name="text">
-                 <string>更多配置</string>
+                 <string>数据收发</string>
                 </property>
                </widget>
               </item>

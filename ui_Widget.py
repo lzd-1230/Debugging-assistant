@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './Mywin.ui'
+# Form implementation generated from reading ui file '.\Mywin.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -158,15 +158,18 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.gridLayout_5)
         self.gridLayout_4 = QtWidgets.QGridLayout()
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.uart_paint_switch = QtWidgets.QCheckBox(self.uart_tab)
-        self.uart_paint_switch.setObjectName("uart_paint_switch")
-        self.gridLayout_4.addWidget(self.uart_paint_switch, 2, 0, 1, 1)
-        self.com_switch = QtWidgets.QCheckBox(self.uart_tab)
-        self.com_switch.setObjectName("com_switch")
-        self.gridLayout_4.addWidget(self.com_switch, 1, 0, 1, 1)
         self.uart_config_btn = QtWidgets.QPushButton(self.uart_tab)
         self.uart_config_btn.setObjectName("uart_config_btn")
         self.gridLayout_4.addWidget(self.uart_config_btn, 0, 0, 1, 1)
+        self.com_switch = QtWidgets.QCheckBox(self.uart_tab)
+        self.com_switch.setObjectName("com_switch")
+        self.gridLayout_4.addWidget(self.com_switch, 2, 0, 1, 1)
+        self.uart_paint_switch = QtWidgets.QCheckBox(self.uart_tab)
+        self.uart_paint_switch.setObjectName("uart_paint_switch")
+        self.gridLayout_4.addWidget(self.uart_paint_switch, 3, 0, 1, 1)
+        self.data_show_dialog = QtWidgets.QPushButton(self.uart_tab)
+        self.data_show_dialog.setObjectName("data_show_dialog")
+        self.gridLayout_4.addWidget(self.data_show_dialog, 1, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout_4)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.horizontalLayout.setStretch(0, 6)
@@ -231,9 +234,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.socket_tab), _translate("MainWindow", "网络模式"))
         self.label_2.setText(_translate("MainWindow", "串口选择"))
         self.label.setText(_translate("MainWindow", "波特率"))
-        self.uart_paint_switch.setText(_translate("MainWindow", "绘制图像"))
-        self.com_switch.setText(_translate("MainWindow", "打开串口"))
         self.uart_config_btn.setText(_translate("MainWindow", "更多配置"))
+        self.com_switch.setText(_translate("MainWindow", "打开串口"))
+        self.uart_paint_switch.setText(_translate("MainWindow", "绘制图像"))
+        self.data_show_dialog.setText(_translate("MainWindow", "数据收发"))
         self.save_uart_data_btn.setText(_translate("MainWindow", "保存数据"))
         self.clear_uart_data.setText(_translate("MainWindow", "清空数据"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.uart_tab), _translate("MainWindow", "串口模式"))

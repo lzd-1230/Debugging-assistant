@@ -1,0 +1,9 @@
+image: reg.lzd.com/base-image/python3.7:alpine
+
+before_script:
+  - python -m pip install -r requirements.txt
+
+pylint:
+  script:
+    - python -m pip install pylint
+    - pylint --errors-only 

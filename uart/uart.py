@@ -5,9 +5,10 @@ import utils.global_var as g
 import asyncio
 import aioserial
 import struct
+from uart.protocol import data_recv_protocol
 from quamash import QEventLoop
 from PyQt5.QtCore import pyqtSignal
-from serial.serialutil import PortNotOpenError
+
 
 class Uart():
     uart_recv_content_signal = pyqtSignal(bytes) # 收到数据的信号
@@ -35,33 +36,8 @@ class Uart():
                 print("enter close")
                 aioserial_instance.close()
                 break
-            try:
-                data_len_b: bytes = await aioserial_instance.read_async(2)
-            except PortNotOpenError as e:
-                break
-
-            data_len = data_len_b.decode()
-            # 读掉后面的回车!
-            _ = None
-            while(_ != b'\n'):
-                try:
-                    _ = await aioserial_instance.read_async()# win下的换行是\r\n两个字节
-                except PortNotOpenError as e:
-                    break
-            try:
-                print(data_len)
-                data =  await aioserial_instance.read_async(int(data_len))
-            except PortNotOpenError as e:
-                break
-            print(f"数据:{data}")
-    
-            _ = ""
-            while(_ != b'\n'):
-                try:
-                    _ = await aioserial_instance.read_async()
-                except PortNotOpenError as e:
-                    break
-            
+            data = await data_recv_protocol(aioserial_instance)
+            # 信号来了触发信号
             if(data):
                 self.uart_recv_content_signal.emit(data)
       

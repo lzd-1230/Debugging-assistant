@@ -8,6 +8,7 @@ if __name__ == '__main__':
     opts = ['-F',
             '-w',
             '-y',
+        #     '--icon=F:\Download\wallhaven-gjpqdq.png',
             # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\bin',
             # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\plugins',
             # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\newspaper3k-0.2.6-py3.6.egg\\newspaper',
