@@ -14,6 +14,7 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
+    - conda env list
     - python -m pip install pylint  
     - pylint --errors-only Plot/ Network/ uart/ utils/
 
