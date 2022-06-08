@@ -5,7 +5,6 @@ stages:
 before_script:
   # - conda create --name myenv
   - conda init powershell
-  - "if (test-path $PROFILE.CurrentUserAllHosts) { & $PROFILE.CurrentUserAllHosts}"
   - conda activate pyqt 
 
 .set_tags: &set-tags  
