@@ -2,10 +2,7 @@ stages:
   - "lint"
   - "build"
 
-before_script:
-  - conda init powershell
-  - conda activate pyqt 
-  - conda env list
+
 
 .set_tags: &set-tags  
   tags:
@@ -15,6 +12,9 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
+    - conda init powershell
+    - conda activate pyqt 
+    - conda env list
     - python -m pip install pylint'
     - pylint --errors-only Plot/ Network/ uart/ utils/'
 
@@ -23,6 +23,9 @@ build:
   stage: "build"
 
   script:
+    - conda init powershell
+    - conda activate pyqt 
+    - conda env list
     - python setup.py'
 
   artifacts:
