@@ -3,8 +3,8 @@ stages:
   - "build"
 
 before_script:
-  - D:\software\conda\condabin\conda.bat init powershell
-  - D:\software\conda\condabin\conda.bat activate pyqt
+  - conda init powershell
+  - conda activate pyqt
 
 .set_tags: &set-tags  
   tags:
