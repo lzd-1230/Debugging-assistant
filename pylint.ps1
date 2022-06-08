@@ -1,5 +1,3 @@
-conda init powershell
-conda activate pyqt
 Write-Host "lint job"
-python -m pip install pylint
-pylint --errors-only Plot/ Network/ uart/ utils/
+conda run -n pyqt python -m pip install pylint
+conda run -n pyqt pylint --errors-only Plot/ Network/ uart/ utils/
