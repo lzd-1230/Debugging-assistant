@@ -3,9 +3,9 @@ stages:
   - "build"
 
 before_script:
-  # - conda create --name myenv
   - conda init powershell
   - conda activate pyqt 
+  - conda env list
 
 .set_tags: &set-tags  
   tags:
