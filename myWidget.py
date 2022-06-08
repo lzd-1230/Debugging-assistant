@@ -1,4 +1,4 @@
-import sys
+import os
 import time
 import pandas as pd
 from PyQt5.QtCore import pyqtSignal
@@ -115,13 +115,17 @@ class WidgetLogic(QMainWindow):
         cur_data = cur_data.decode(encoding="utf8",errors="ignore")
         cur_data = cur_data.split(" ")
         if(self.uart_paint_recv):
-            for idx,key in enumerate(self.pic_uart.pic_dict):
-                self.pic_uart.data_dict[key].append(float(cur_data[idx]))
+            for idx,key in enumerate(self.pic_uart.pic_dict): 
+                self.pic_uart.data_dict[key].append(float(cur_data[idx]))  # 画图数据
+                # 在这里添加一个全局变量
+
             self.pic_uart.cur_x += 1
             self.pic_uart.new_data = True
 
         # 将数据赋值到写的窗口
         self.ui.uart_recv_show.append(str(cur_data))
+        # 如果数据收发对话框打开了,则将数据写入
+
 
     # 保存socket接收的数据
     def save_socket_recv_data(self):
@@ -137,6 +141,8 @@ class WidgetLogic(QMainWindow):
     def save_uart_recv_data(self):
         data = pd.DataFrame(self.pic_uart.data_dict)
         time_prefix = time.strftime("%Y-%m-%d-%H-%M-%S")
+        if not os.path.isdir("./data_save"):
+            os.mkdir("./data_save")
         with open("./data_save/"+time_prefix+"_uart"+".csv",mode="w",newline="") as f:
             data.to_csv(f)
         self.ui.socket_recv_show.append("数据保存成功")

@@ -73,9 +73,8 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
 
     def data_interact_dialog_raise(self):
         """数据交互窗口打开"""
-        self.data_interact_dialog = Data_Interact_dialog()
+        self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data) # WidgetLogic中也是可以拿到这个对象的!
         self.data_interact_dialog.exec()
-
 
 
     # 将最新的地址写入公共变量字典
@@ -186,7 +185,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     from quamash import QEventLoop
     loop = QEventLoop(app)
-    print(id(loop))
     
     icon = QIcon(":/icons/image/关闭小.png")
     app.setWindowIcon(icon)
