@@ -14,14 +14,15 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
-    - powershell.exe -File pylint.ps1
+    - python -m pip install pylint  
+    - pylint --errors-only Plot/ Network/ uart/ utils/
 
 build:
   <<: *set-tags
   stage: "build"
 
   script:
-    - powershell.exe -File build.ps1
+    - python setup.py
 
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
