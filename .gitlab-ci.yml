@@ -17,14 +17,14 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
-    - powershell.exe -File pylint.ps1
+    - powershell.exe -File ./win_ci_script/pylint.ps1
 
 build:
   <<: *set-tags
   stage: "build"
 
   script:
-    - powershell.exe -File build.ps1
+    - powershell.exe -File ./win_ci_script/build.ps1
 
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
