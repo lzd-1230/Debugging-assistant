@@ -3,7 +3,7 @@ stages:
   - "build"
 
 before_script:
-  - conda init powershell
+  - conda init
   - conda env list
 #   - conda activate pyqt
 
