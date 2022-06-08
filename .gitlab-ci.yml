@@ -2,8 +2,6 @@ stages:
   - "lint"
   - "build"
 
-
-
 .set_tags: &set-tags  
   tags:
     - qt-win-runner1
@@ -32,7 +30,3 @@ build:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     paths:
       - dist/
-
-
-
-
