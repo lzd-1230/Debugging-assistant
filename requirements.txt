@@ -6,3 +6,4 @@ pyqtgraph==0.12.3
 pyserial==3.5
 PyYAML==6.0
 Quamash==0.6.1
+Pillow
