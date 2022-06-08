@@ -10,6 +10,7 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
+    - echo "lint"
     - conda init powershell
     - conda activate pyqt 
     - conda env list
@@ -21,6 +22,7 @@ build:
   stage: "build"
 
   script:
+    - echo "build"
     - conda init powershell
     - conda activate pyqt 
     - conda env list
