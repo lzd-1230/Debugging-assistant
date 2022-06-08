@@ -2,8 +2,6 @@ stages:
   - "lint"
   - "build"
 
-before_script:
-  - conda activate pyqt
 
 .set_tags: &set-tags  
   tags:
@@ -21,7 +19,7 @@ build:
   stage: "build"
 
   script:
-    - python setup.py
+    - powershell.exe -File build.ps1
 
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
