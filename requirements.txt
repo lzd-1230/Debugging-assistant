@@ -1,5 +1,5 @@
 aioserial==1.3.0
-pandas==1.4.2
+pandas
 PyInstaller==5.1
 PyQt5==5.15.6
 pyqtgraph==0.12.3
