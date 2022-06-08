@@ -21,7 +21,7 @@ if __name__ == '__main__':
                 # '--clean',
                 # '--icon=icon\\icon.ico',
                 'main.py']
-    elif os.name=="posix":
+    elif os.name=="posix":  # 好像不太行,pyqtgraph的包好像要手动引入了...
         opts = ['-F',
                 '-y',
                 '--icon=./image/avartar.png',
