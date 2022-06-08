@@ -1,4 +1,4 @@
-conda init
+conda init powershell
 conda activate pyqt
 Write-Host "lint job"
 python -m pip install pylint
