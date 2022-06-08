@@ -5,18 +5,21 @@ stages:
 before_script:
   - conda activate pyqt
 
-pylint:
-  stage: "lint"
+.set_tags: &set-tags  
   tags:
-    - "qt-runner"
+    - qt-win-runner1
+
+pylint:
+  <<: *set-tags
+  stage: "lint"
   script:
     - python -m pip install pylint
     - pylint --errors-only Plot/ Network/ uart/ utils/
 
 build:
+  <<: *set-tags
   stage: "build"
-  tags:
-    - "qt-runner"
+
   script:
     - python setup.py
 
