@@ -4,6 +4,7 @@ stages:
 
 before_script:
   - conda init powershell
+  - conda env list
 #   - conda activate pyqt
 
 .set_tags: &set-tags  
