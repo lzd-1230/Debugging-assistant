@@ -2,10 +2,11 @@ stages:
   - "lint"
   - "build"
 
-# before_script:
-#   - conda init
-#   - conda env list
-#   - conda activate pyqt
+before_script:
+  # - conda create --name myenv
+  - conda init powershell
+  - "if (test-path $PROFILE.CurrentUserAllHosts) { & $PROFILE.CurrentUserAllHosts}"
+  - conda activate pyqt 
 
 .set_tags: &set-tags  
   tags:
@@ -15,15 +16,15 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
-    - cmd '/C' 'conda activate pyqt && python -m pip install pylint'
-    - cmd '/C' 'conda activate pyqt && pylint --errors-only Plot/ Network/ uart/ utils/'
+    - python -m pip install pylint'
+    - pylint --errors-only Plot/ Network/ uart/ utils/'
 
 build:
   <<: *set-tags
   stage: "build"
 
   script:
-    - cmd '/C' 'conda activate pyqt && python setup.py'
+    - python setup.py'
 
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
