@@ -2,9 +2,9 @@ stages:
   - "lint"
   - "build"
 
-before_script:
-  - conda init
-  - conda env list
+# before_script:
+#   - conda init
+#   - conda env list
 #   - conda activate pyqt
 
 .set_tags: &set-tags  
@@ -15,15 +15,15 @@ pylint:
   <<: *set-tags
   stage: "lint"
   script:
-    -  conda run -n pyqt python -m pip install pylint  
-    - conda run -n pyqt pylint --errors-only Plot/ Network/ uart/ utils/
+    - cmd '/C' 'conda run -n pyqt python -m pip install pylint'
+    - cmd '/C' 'conda run -n pyqt pylint --errors-only Plot/ Network/ uart/ utils/'
 
 build:
   <<: *set-tags
   stage: "build"
 
   script:
-    - conda run -n pyqt python setup.py
+    - cmd '/C' 'conda run -n pyqt python setup.py'
 
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
