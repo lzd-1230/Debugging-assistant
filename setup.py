@@ -36,6 +36,6 @@ if __name__ == '__main__':
                 # '--clean',
                 # '--icon=icon\\icon.ico',
                 'main.py']
-    # run(opts)
+    run(opts)
     shutil.copy("style.qss","./dist/")
     shutil.copytree("./config","./dist/config")
