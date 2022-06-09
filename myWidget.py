@@ -124,7 +124,8 @@ class WidgetLogic(QMainWindow):
 
         # 将数据赋值到写的窗口
         self.ui.uart_recv_show.append(str(cur_data))
-        # 如果数据收发对话框打开了,则将数据写入
+        if(self.data_interact_dialog_isopened):
+            self.data_interact_dialog.ui.recv_area.append(str(cur_data))
 
 
     # 保存socket接收的数据

@@ -73,8 +73,11 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
 
     def data_interact_dialog_raise(self):
         """数据交互窗口打开"""
+        self.data_interact_dialog_isopened = True
         self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data) # WidgetLogic中也是可以拿到这个对象的!
         self.data_interact_dialog.exec()
+
+        self.data_interact_dialog_isopened = False
 
 
     # 将最新的地址写入公共变量字典
