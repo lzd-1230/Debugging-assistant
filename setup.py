@@ -22,8 +22,6 @@ if __name__ == '__main__':
                 # '--clean',
                 # '--icon=icon\\icon.ico',
                 'main.py']
-        shutil.copy("./style.qss","./dist/")
-        shutil.copy("./config","./dist/")
     elif os.name=="posix":  # 好像不太行,pyqtgraph的包好像要手动引入了...
         opts = ['-F',
                 '-y',
@@ -39,3 +37,5 @@ if __name__ == '__main__':
                 # '--icon=icon\\icon.ico',
                 'main.py']
     run(opts)
+    shutil.copy("./style.qss","./dist/")
+    shutil.copy("./config","./dist/")
