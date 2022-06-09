@@ -74,9 +74,12 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     def data_interact_dialog_raise(self):
         """数据交互窗口打开"""
         self.data_interact_dialog_isopened = True
-        self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data) # WidgetLogic中也是可以拿到这个对象的!
-        self.data_interact_dialog.exec()
+        try:
+            self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data,self.serial) # WidgetLogic中也是可以拿到这个对象的!
+        except AttributeError:
+            self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data)
 
+        self.data_interact_dialog.exec()
         self.data_interact_dialog_isopened = False
 
 
@@ -189,8 +192,9 @@ if __name__ == "__main__":
     from quamash import QEventLoop
     loop = QEventLoop(app)
     
-    icon = QIcon(":/icons/image/关闭小.png")
+    icon = QIcon(":/icons/image/avartar.ico")
     app.setWindowIcon(icon)
+
     font = QFont("Microsoft YaHei")
     app.setFont(font)
 

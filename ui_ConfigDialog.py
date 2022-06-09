@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ConfigDialog.ui'
+# Form implementation generated from reading ui file './ui_files/ConfigDialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(324, 159)
+        Dialog.resize(400, 159)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/image/avartar.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -45,6 +48,12 @@ class Ui_Dialog(object):
         self.ok.setObjectName("ok")
         self.horizontalLayout_3.addWidget(self.ok)
         self.cancel = QtWidgets.QPushButton(Dialog)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/icons/image/关闭小.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.cancel.setIcon(icon1)
+        self.cancel.setCheckable(False)
+        self.cancel.setAutoRepeat(False)
+        self.cancel.setAutoExclusive(False)
         self.cancel.setObjectName("cancel")
         self.horizontalLayout_3.addWidget(self.cancel)
         self.gridLayout.addLayout(self.horizontalLayout_3, 2, 0, 1, 1)
@@ -61,3 +70,4 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "默认区域大小 "))
         self.ok.setText(_translate("Dialog", "OK"))
         self.cancel.setText(_translate("Dialog", "Cancel"))
+import res_rc

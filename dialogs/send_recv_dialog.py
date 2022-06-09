@@ -1,16 +1,19 @@
 import pandas as pd
 import time
+from  typing import Optional
 from  ui_RecvSendArea import Ui_Dialog
 from PyQt5.QtWidgets import QDialog
+from aioserial import AioSerial
+
 
 class Data_Interact_dialog(QDialog):
-    def __init__(self,save_btn_handler):
+    def __init__(self,save_btn_handler,serial_obj: Optional[AioSerial]=None):
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("数据收发区")
         self.save_btn_handler = save_btn_handler
-
+        self.serial = serial_obj
         self.set_init_val()
 
     # 初始化
@@ -25,9 +28,25 @@ class Data_Interact_dialog(QDialog):
         self.ui.save_data_btn.clicked.connect(self.save_btn_handler)
         self.ui.send_btn.clicked.connect(self.data_send_handler)
 
+    # 发送输入框输入的内容
     def data_send_handler(self):
         data_input = self.ui.send_area.toPlainText()
-        print(data_input)
+
+        # 字符串发送
+        if(self.ui.text_send_mode.isChecked()):
+            if(self.serial is not None):
+                _ = self.serial.write(data_input.encode("utf-8"))
+
+        # hex发送
+        elif(self.ui.hex_send_mode.isChecked()):
+            if(self.serial is not None):
+                try:
+                    data_list = data_input.split(" ")
+                    data_list_hex = [int(ele,16) for ele in data_list]
+                    self.serial.write(bytearray(data_list_hex))
+                except Exception as e:
+                    print(e)
+
 
     def clear_send_area_handler(self):
         self.ui.send_area.clear()

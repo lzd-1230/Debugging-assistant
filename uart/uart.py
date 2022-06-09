@@ -40,7 +40,6 @@ class Uart():
             # 信号来了触发信号
             if(data):
                 self.uart_recv_content_signal.emit(data)
-      
 
     async def start_com(self):
         coro = self.read_and_print(self.serial)
