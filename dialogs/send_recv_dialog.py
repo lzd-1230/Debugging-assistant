@@ -23,6 +23,11 @@ class Data_Interact_dialog(QDialog):
         self.ui.clear_recv_area_btn.clicked.connect(self.clear_recv_area_handler)
         self.ui.clear_send_btn.clicked.connect(self.clear_send_area_handler)
         self.ui.save_data_btn.clicked.connect(self.save_btn_handler)
+        self.ui.send_btn.clicked.connect(self.data_send_handler)
+
+    def data_send_handler(self):
+        data_input = self.ui.send_area.toPlainText()
+        print(data_input)
 
     def clear_send_area_handler(self):
         self.ui.send_area.clear()

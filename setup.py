@@ -3,6 +3,7 @@
 from PyInstaller.__main__ import run
 import sys
 import os
+import shutil
 
 if __name__ == '__main__':
     sys.setrecursionlimit(1000)
@@ -14,13 +15,15 @@ if __name__ == '__main__':
                 # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\bin',
                 # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt\\plugins',
                 # '--paths=D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\newspaper3k-0.2.6-py3.6.egg\\newspaper',
-                '--add-data', '.\style.qss;.\style.qss',
-                '--add-data', '.\config\*;.\config',
+                # '--add-data', '.\style.qss;.\style.qss',
+                # '--add-data', '.\config\*;.\config',
                 # '--add-data', 'image/*;image/',
-                '--add-data', '.\data_save\*;.\data_save',
+                # '--add-data', '.\data_save\*;.\data_save',
                 # '--clean',
                 # '--icon=icon\\icon.ico',
                 'main.py']
+        shutil.copy("./style.qss","./dist/")
+        shutil.copy("./config","./dist/")
     elif os.name=="posix":  # 好像不太行,pyqtgraph的包好像要手动引入了...
         opts = ['-F',
                 '-y',
