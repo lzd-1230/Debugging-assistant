@@ -1,19 +1,20 @@
 import sys
-from myWidget import WidgetLogic
-from Network import NetworkLogic
-from uart import UartLogic
 from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog
 from PyQt5.QtGui import QIcon,QFont
 from PyQt5.QtCore import pyqtSlot
+from myWidget import WidgetLogic
+from Network import NetworkLogic
+from uart import UartLogic
 import utils.global_var as g
 from Network.stopThreading import stop_thread
 from ui_ConfigDialog import Ui_Dialog
 import time
 import asyncio
 from dialogs.uart_config_dialog import Uart_Config_dialog
-
+from dialogs.send_recv_dialog import Data_Interact_dialog
 
 class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
+    """主窗口类"""
     def __init__(self,app,loop,parent=None):
         super().__init__(parent)   # 这里是WidgetLogic的初始化函数
         self.app = app
@@ -21,31 +22,30 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
         # 不同类的方法属性绑定
         self.socket_recv_content_signal.connect(self.socket_recv_data)  # NetworkLogic类的类属性
         self.uart_recv_content_signal.connect(self.uart_recv_data)
-        
         self.ui.uart_config_btn.clicked.connect(self.uart_dialog_raise)
+        self.ui.data_show_dialog.clicked.connect(self.data_interact_dialog_raise)
 
         self.ui.socket_switch.toggled.connect(self.socket_control_handler) # WidgetLogic类的方法
         self.ui.com_switch.toggled.connect(self.com_control_handler)
         self.ui.recv_data_btn.toggled.connect(self.recv_content_handle) # designer中的属性
         self.ui.socket_paint_switch.toggled.connect(self.paint_switch_handler) # 自己的逻辑函数
         self.ui.uart_paint_switch.toggled.connect(self.uart_paint_switch_handler)
-        
         self.ui.port_input.textChanged.connect(self._get_addr)
         self.ui.ip_com.currentTextChanged.connect(self._ip_com_change_handler)
         self.ui.uart_com.currentTextChanged.connect(self._uart_port_change_handler)
         self.ui.baud_boxcom.currentTextChanged.connect(self._baud_change_handler)
 
     # ip端口改变的槽函数
-    @pyqtSlot(str)  
+    @pyqtSlot(str)
     def _ip_com_change_handler(self,cur_text):
         g.set_var("listen_ip",cur_text)  # 公共变量设置
         self.get_addr()
-    
+
     @pyqtSlot(str) 
     def _uart_port_change_handler(self,cur_text):
         g.set_var("uart_port",cur_text)
         self.get_uart_info()
-    
+
     @pyqtSlot(str)
     def _baud_change_handler(self,cur_text):
         g.set_var("baudrate",int(cur_text))
@@ -53,25 +53,32 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
 
     # 串口参数修改对话框
     def uart_dialog_raise(self):
-        dialog = Uart_Config_dialog()
+        uart_config_dialog = Uart_Config_dialog()
         # 初值获取
         curve_num = self.pic_uart.curve_num
         attention_range = self.pic_uart.attention_range
 
-        dialog.set_init_val(attention_range=attention_range,
-                            curve_num=curve_num,
-                            )
+        uart_config_dialog.set_init_val(attention_range=attention_range,
+                            curve_num=curve_num)
 
-        res = dialog.exec()
+        res = uart_config_dialog.exec()  # 关闭后拿到是否修改
+
         if(res == QDialog.DialogCode.Accepted):
-            ret = dialog.close_return()
+            ret = uart_config_dialog.close_return()
             # 完成数据的赋值
-            # print(f"attention_range{ret[0]}")
-            # print(f"attention_range{ret[1]}")
             self.pic_uart.attention_range = ret[0] 
             self.pic_uart.curve_num = ret[1]
             self.pic_uart.p1.clear()    # 清除所有
-            self.pic_uart.reconfig_curve()  # 重新初始化(其实只用初始化一部分就可以了)
+            self.pic_uart.reconfig_curve()  # 重新初始化绘图框(其实只用初始化一部分就可以了)
+
+    def data_interact_dialog_raise(self):
+        """数据交互窗口打开"""
+        self.data_interact_dialog_isopened = True
+        self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data) # WidgetLogic中也是可以拿到这个对象的!
+        self.data_interact_dialog.exec()
+
+        self.data_interact_dialog_isopened = False
+
 
     # 将最新的地址写入公共变量字典
     def _get_addr(self):
@@ -181,7 +188,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     from quamash import QEventLoop
     loop = QEventLoop(app)
-    print(id(loop))
     
     icon = QIcon(":/icons/image/关闭小.png")
     app.setWindowIcon(icon)

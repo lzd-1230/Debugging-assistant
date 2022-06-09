@@ -1,0 +1,32 @@
+stages:
+  - "lint"
+  - "build"
+
+.set_tags: &set-tags  
+  tags:
+    - qt-win-runner1
+
+before_script:
+  - conda create --name pyqt-runner python=3.7
+  - conda init powershell
+  - "if (test-path $PROFILE.CurrentUserAllHosts) { & $PROFILE.CurrentUserAllHosts}"
+  - conda activate pyqt-runner 
+  - pip install -r requirements.txt
+
+pylint:
+  <<: *set-tags
+  stage: "lint"
+  script:
+    - powershell.exe -File ./win_ci_script/pylint.ps1
+
+build:
+  <<: *set-tags
+  stage: "build"
+
+  script:
+    - powershell.exe -File ./win_ci_script/build.ps1
+
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    paths:
+      - dist/

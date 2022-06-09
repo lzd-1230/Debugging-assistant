@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QDialog
 from PyQt5.Qt import QValidator
 from ui_ConfigDialog import Ui_Dialog
 
-
 class Uart_Config_dialog(QDialog):
     def __init__(self,):
         super().__init__()
@@ -14,7 +13,6 @@ class Uart_Config_dialog(QDialog):
         self.ui.attention_range.setValidator(Int_Validator())
         self.ui.attention_range.setText(str(attention_range))
         self.ui.curve_num.setValue(curve_num)
-
 
     def close_return(self):
         attention_range = int(self.ui.attention_range.text())
@@ -33,7 +31,6 @@ class Int_Validator(QValidator):
             return (QValidator.Acceptable, input_str,curse_pos)
         else:
             return (QValidator.Invalid, input_str,curse_pos)
-
 
     def finished_check(self,string):
         if string == "":
