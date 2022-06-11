@@ -8,6 +8,7 @@ from ui_Widget import Ui_MainWindow
 from utils.com_utils import *
 import utils.global_var as g
 from Plot import Line_plot
+from uart.protocol import app_data_processor,app_data_handler
 
 class WidgetLogic(QMainWindow):
     def __init__(self,parent=None): # 单继承ui界面
@@ -20,6 +21,12 @@ class WidgetLogic(QMainWindow):
         self.pic = Line_plot(self.ui.socket_graph)
         self.pic_uart = Line_plot(self.ui.serial_graph)
         self.vars_init()
+    
+    # 应用层协议
+    def uart_recv_data(self,cur_data:bytes):
+        print(cur_data)
+        cur_data_list = app_data_processor(cur_data)  # 处理数据
+        app_data_handler(self,cur_data_list)  # 完成数据展示
     
     # 公共变量初始化
     def vars_init(self):
@@ -110,22 +117,7 @@ class WidgetLogic(QMainWindow):
             # 像文本框中写入内容
             self.ui.socket_recv_show.append(str(cur_data))
 
-    # 串口接收数据的回调函数
-    def uart_recv_data(self,cur_data:bytes):
-        cur_data = cur_data.decode(encoding="utf8",errors="ignore")
-        cur_data = cur_data.split(" ")
-        if(self.uart_paint_recv):
-            for idx,key in enumerate(self.pic_uart.pic_dict): 
-                self.pic_uart.data_dict[key].append(float(cur_data[idx]))  # 画图数据
-                # 在这里添加一个全局变量
-
-            self.pic_uart.cur_x += 1
-            self.pic_uart.new_data = True
-
-        # 将数据赋值到写的窗口
-        self.ui.uart_recv_show.append(str(cur_data))
-        if(self.data_interact_dialog_isopened):
-            self.data_interact_dialog.ui.recv_area.append(str(cur_data))
+    
 
 
     # 保存socket接收的数据

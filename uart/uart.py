@@ -5,10 +5,9 @@ import utils.global_var as g
 import asyncio
 import aioserial
 import struct
-from uart.protocol import data_recv_protocol
+from uart.protocol import rowframe_data_recv_protocol
 from quamash import QEventLoop
 from PyQt5.QtCore import pyqtSignal
-
 
 class Uart():
     uart_recv_content_signal = pyqtSignal(bytes) # 收到数据的信号
@@ -36,7 +35,7 @@ class Uart():
                 print("enter close")
                 aioserial_instance.close()
                 break
-            data = await data_recv_protocol(aioserial_instance)
+            data = await rowframe_data_recv_protocol(aioserial_instance)
             # 信号来了触发信号
             if(data):
                 self.uart_recv_content_signal.emit(data)

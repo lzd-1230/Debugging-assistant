@@ -35,7 +35,16 @@ class Data_Interact_dialog(QDialog):
         # 字符串发送
         if(self.ui.text_send_mode.isChecked()):
             if(self.serial is not None):
-                _ = self.serial.write(data_input.encode("utf-8"))
+                bytesarr = bytearray(data_input.encode("ascii"))
+                # "\n"强行换成"\r\n"
+                if(bytesarr.endswith(b"\n")):
+                    bytesarr[-1] = 0x0d
+                    bytesarr.append(0x0a)
+                else:
+                    bytesarr.append(0x0d)
+                    bytesarr.append(0x0a)
+
+                _ = self.serial.write(bytesarr)
 
         # hex发送
         elif(self.ui.hex_send_mode.isChecked()):

@@ -1,12 +1,12 @@
 graph:
-  curve_num: 4  # 曲线的数量
+  curve_num: 2  # 曲线的数量
   curve_names:  # 曲线的名称
-    - l1
-    - l2
-    - l3
-    - l4
-    - l5
-    - l6
+    - 原曲线
+    - 滤波后
+    # - l3
+    # - l4
+    # - l5
+    # - l6
   attention_range: 50 # 专注显示的范围
   curve_color: # 曲线的颜色
     - "#ff7f0e"
