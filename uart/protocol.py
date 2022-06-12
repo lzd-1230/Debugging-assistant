@@ -42,7 +42,6 @@ async def rowframe_data_recv_protocol(aioserial_instance):
     data_row = await aioserial_instance.readline_async()
     return data_row
 
-
 # 应用层协议:对每一帧数据进行如何拆解,python变量的定义等
 def app_data_processor(data:bytes) -> list:
     """
@@ -53,6 +52,7 @@ def app_data_processor(data:bytes) -> list:
     data = data.decode(encoding="utf8",errors="ignore")  # 这里拿到解码的数据
     # 输入: cur_data
     data_list = data.split(" ")
+    print(f"recv:{data_list}")
     return data_list
 
 # 应用层处理:如显示到数据框和绘图区域!
@@ -61,17 +61,23 @@ def app_data_handler(widget,cur_data_list:list) -> None:
     完成数据的处理和展示和画图组件交互
     widget: 为MainWindow的对象
     """
-    if(int(float(cur_data_list[0])) == 0):
-        key = list(widget.pic_uart.pic_dict.keys())[0]
-
-        for i in range(1,len(cur_data_list)): 
-            widget.pic_uart.data_dict[key].append(float(cur_data_list[i]))
-    else: 
-        key = list(widget.pic_uart.pic_dict.keys())[1]  # 滤波后的数据序列
-        for i in range(1,len(cur_data_list)): 
-            widget.pic_uart.data_dict[key].append(float(cur_data_list[i]))
-            widget.pic_uart.cur_x += 1
-        widget.pic_uart.new_data = True
+    try:
+        if(int(float(cur_data_list[0])) == 0):
+            key = list(widget.pic_uart.pic_dict.keys())[0]
+            for i in range(1,len(cur_data_list)): 
+                if(float(cur_data_list[i])>-80 and float(cur_data_list[i])<80):
+                    widget.pic_uart.data_dict[key].append(float(cur_data_list[i]))
+                    widget.pic_uart.cur_x += 1
+            widget.pic_uart.new_data = True
+        elif(int(float(cur_data_list[0])) == 1): 
+            key = list(widget.pic_uart.pic_dict.keys())[1]  # 滤波后的数据序列
+            for i in range(1,len(cur_data_list)): 
+                if(float(cur_data_list[i])>-80 and float(cur_data_list[i])<80):
+                    widget.pic_uart.data_dict[key].append(float(cur_data_list[i]))
+            #     widget.pic_uart.cur_x += 1
+            # widget.pic_uart.new_data = True
+    except ValueError:
+        pass
 
     # 将数据赋值到写的窗口
     widget.ui.uart_recv_show.append(str(cur_data_list))

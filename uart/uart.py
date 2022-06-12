@@ -23,7 +23,7 @@ class Uart():
     def com_init(self,loop):
         self.get_uart_info()
         self.loop = loop
-        print(f"创建串口任务之前事件循环已经开始{self.loop.is_running()}")
+        # print(f"创建串口任务之前事件循环已经开始{self.loop.is_running()}")
         asyncio.set_event_loop(self.loop) 
         self.serial = aioserial.AioSerial(port=self.port, baudrate=self.baudrate,loop=self.loop) 
         print(f"open current port:{self.port} cur baudrate:{self.baudrate}")

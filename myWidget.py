@@ -24,7 +24,6 @@ class WidgetLogic(QMainWindow):
     
     # 应用层协议
     def uart_recv_data(self,cur_data:bytes):
-        print(cur_data)
         cur_data_list = app_data_processor(cur_data)  # 处理数据
         app_data_handler(self,cur_data_list)  # 完成数据展示
     

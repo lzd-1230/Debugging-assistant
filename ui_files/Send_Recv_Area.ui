@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>416</width>
-    <height>330</height>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,10 +66,24 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
+        <item row="4" column="0">
+         <widget class="QPushButton" name="send_btn">
+          <property name="text">
+           <string>发送</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QRadioButton" name="text_send_mode">
           <property name="text">
            <string>文本模式</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="clear_send_btn">
+          <property name="text">
+           <string>清空发送区</string>
           </property>
          </widget>
         </item>
@@ -81,16 +95,9 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QPushButton" name="clear_send_btn">
+         <widget class="QPushButton" name="send_file_btn">
           <property name="text">
-           <string>清空发送区</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="send_btn">
-          <property name="text">
-           <string>发送</string>
+           <string>发送数据文件</string>
           </property>
          </widget>
         </item>
