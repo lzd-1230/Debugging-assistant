@@ -1,7 +1,7 @@
 import aioserial
 from serial.serialutil import PortNotOpenError
 
-# 帧格式协议
+# 一开始自定义的帧格式协议(未使用)
 async def frame_data_recv_protocol(aioserial_instance):
     """
     定义串口帧接收的协议
@@ -52,7 +52,7 @@ def app_data_processor(data:bytes) -> list:
     data = data.decode(encoding="utf8",errors="ignore")  # 这里拿到解码的数据
     # 输入: cur_data
     data_list = data.split(" ")
-    print(f"recv:{data_list}")
+    # print(f"recv:{data_list}")
     return data_list
 
 # 应用层处理:如显示到数据框和绘图区域!
