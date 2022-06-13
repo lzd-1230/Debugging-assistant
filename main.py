@@ -19,9 +19,10 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
         super().__init__(parent)   # 这里是WidgetLogic的初始化函数
         self.app = app
         self.loop = loop
+        self.data_interact_dialog_isopened = False
         # 不同类的方法属性绑定
         self.socket_recv_content_signal.connect(self.socket_recv_data)  # NetworkLogic类的类属性
-        self.uart_recv_content_signal.connect(self.uart_recv_data)
+        self.uart_recv_content_signal.connect(self.uart_recv_data)  # 应用层通信协议以及处理函数
         self.ui.uart_config_btn.clicked.connect(self.uart_dialog_raise)
         self.ui.data_show_dialog.clicked.connect(self.data_interact_dialog_raise)
 
@@ -74,9 +75,12 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     def data_interact_dialog_raise(self):
         """数据交互窗口打开"""
         self.data_interact_dialog_isopened = True
-        self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data) # WidgetLogic中也是可以拿到这个对象的!
-        self.data_interact_dialog.exec()
+        try:
+            self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data,self.serial) # WidgetLogic中也是可以拿到这个对象的!
+        except AttributeError:
+            self.data_interact_dialog = Data_Interact_dialog(self.save_uart_recv_data)
 
+        self.data_interact_dialog.exec()
         self.data_interact_dialog_isopened = False
 
 
@@ -189,8 +193,9 @@ if __name__ == "__main__":
     from quamash import QEventLoop
     loop = QEventLoop(app)
     
-    icon = QIcon(":/icons/image/关闭小.png")
+    icon = QIcon(":/icons/image/avartar.ico")
     app.setWindowIcon(icon)
+
     font = QFont("Microsoft YaHei")
     app.setFont(font)
 

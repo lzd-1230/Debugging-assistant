@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
+    <width>400</width>
     <height>159</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resource/res.qrc">
+    <normaloff>:/icons/image/avartar.ico</normaloff>:/icons/image/avartar.ico</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -56,13 +60,28 @@
        <property name="text">
         <string>Cancel</string>
        </property>
+       <property name="icon">
+        <iconset resource="../resource/res.qrc">
+         <normaloff>:/icons/image/关闭小.png</normaloff>:/icons/image/关闭小.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoRepeat">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resource/res.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>cancel</sender>

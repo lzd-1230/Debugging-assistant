@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Send_Recv_Area.ui'
+# Form implementation generated from reading ui file './ui_files/Send_Recv_Area.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(600, 600)
+        Dialog.resize(416, 368)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.groupBox = QtWidgets.QGroupBox(Dialog)
@@ -46,18 +46,21 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
+        self.send_btn = QtWidgets.QPushButton(self.groupBox_2)
+        self.send_btn.setObjectName("send_btn")
+        self.gridLayout_2.addWidget(self.send_btn, 4, 0, 1, 1)
         self.text_send_mode = QtWidgets.QRadioButton(self.groupBox_2)
         self.text_send_mode.setObjectName("text_send_mode")
         self.gridLayout_2.addWidget(self.text_send_mode, 0, 0, 1, 1)
+        self.clear_send_btn = QtWidgets.QPushButton(self.groupBox_2)
+        self.clear_send_btn.setObjectName("clear_send_btn")
+        self.gridLayout_2.addWidget(self.clear_send_btn, 3, 0, 1, 1)
         self.hex_send_mode = QtWidgets.QRadioButton(self.groupBox_2)
         self.hex_send_mode.setObjectName("hex_send_mode")
         self.gridLayout_2.addWidget(self.hex_send_mode, 1, 0, 1, 1)
-        self.clear_send_btn = QtWidgets.QPushButton(self.groupBox_2)
-        self.clear_send_btn.setObjectName("clear_send_btn")
-        self.gridLayout_2.addWidget(self.clear_send_btn, 2, 0, 1, 1)
-        self.send_btn = QtWidgets.QPushButton(self.groupBox_2)
-        self.send_btn.setObjectName("send_btn")
-        self.gridLayout_2.addWidget(self.send_btn, 3, 0, 1, 1)
+        self.send_file_btn = QtWidgets.QPushButton(self.groupBox_2)
+        self.send_file_btn.setObjectName("send_file_btn")
+        self.gridLayout_2.addWidget(self.send_file_btn, 2, 0, 1, 1)
         self.horizontalLayout_2.addLayout(self.gridLayout_2)
         self.send_area = QtWidgets.QTextEdit(self.groupBox_2)
         self.send_area.setObjectName("send_area")
@@ -76,7 +79,8 @@ class Ui_Dialog(object):
         self.text_recv_mode.setText(_translate("Dialog", "文本模式"))
         self.save_data_btn.setText(_translate("Dialog", "保存数据"))
         self.groupBox_2.setTitle(_translate("Dialog", "发送区"))
-        self.text_send_mode.setText(_translate("Dialog", "文本模式"))
-        self.hex_send_mode.setText(_translate("Dialog", "hex模式"))
-        self.clear_send_btn.setText(_translate("Dialog", "清空发送区"))
         self.send_btn.setText(_translate("Dialog", "发送"))
+        self.text_send_mode.setText(_translate("Dialog", "文本模式"))
+        self.clear_send_btn.setText(_translate("Dialog", "清空发送区"))
+        self.hex_send_mode.setText(_translate("Dialog", "hex模式"))
+        self.send_file_btn.setText(_translate("Dialog", "发送数据文件"))
