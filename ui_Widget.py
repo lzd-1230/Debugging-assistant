@@ -9,17 +9,12 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        self.desktop = QApplication.desktop()
-        self.screenRect = self.desktop.screenGeometry()
-        self.screenheight = self.screenRect.height()
-        self.screenwidth = self.screenRect.width()
-        MainWindow.resize(self.screenwidth * 0.5, self.screenheight * 0.5)
-        # MainWindow.resize(440, 420)
+        MainWindow.resize(440, 418)
         self.Mainwidget = QtWidgets.QWidget(MainWindow)
         self.Mainwidget.setObjectName("Mainwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.Mainwidget)
