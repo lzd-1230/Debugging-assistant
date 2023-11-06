@@ -1,0 +1,78 @@
+[33m877be54346b6e26ba630df48b8ce62df8e8b5ed3[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m 添加启动尺寸适应
+[33m0018241dda5a9afe3967e1d61b524608ed6ec168[m[33m ([m[1;31mupstream/master[m[33m)[m work分支合并，完成了工程设计的基本数据收发功能
+[33mcec3ad5e0dd598de97f416e8975a0ed0f4c2e95c[m work分支合并，完成了工程设计的基本数据收发功能
+[33m13ee1cb5ddf760cd9bbecceba71a2152b01eaf7a[m[33m ([m[1;31mupstream/work[m[33m)[m 完成了工程设计任务,下位机协议模块抽离出来了,方便自定义
+[33m01e5c89d3e39d547e88427451af6ade022342794[m 滤波器实验上位机完成,同时封装了通信格式的代码
+[33m0c7e29a00ebf710d45ab21e93bad11f0f594e95e[m 帧格式代码的单独封装+上下位机的通信协议
+[33m9124f819a43d00c6ad6bd4bad8a274ac19be888e[m 数据收发功能完成
+[33ma046dbc1edabd82f38789cf2078bc1389581ec08[m pyinstaller CI successed !!
+[33m23f5fec542ec35d7e8517259c0a2f36aef275b20[m pyinstaller CI successed !!!!!
+[33m266509d58f21029390992298b253f94974177714[m update setup.py
+[33m4470c0593c77cff6d527162576389e949f617e59[m update setup.py
+[33meffe1e02c5cfa72d1deed1bdbbfc8a7c386fbff1[m update setup.py
+[33m6becd67dc0defd854c0b7e548e3a3bf919d995da[m update setup.py
+[33m8ee2c000d6d173038b66a7d1c8e389d2b5693b21[m update setup.py
+[33m2f57cca6ddbc5456b79fc97c261084e405d99a73[m update setup.py
+[33md946672ceeda08bc0fdb227a18b2eddf57b6bf29[m update requirements.txt with pillow !!!!!!
+[33m67f455d8a378609347f2e4ffdfdd36b5cb2c8b7a[m pack my win_ci_scipt!!!!!!
+[33mc320238bfe3cbb94fd9d10cbb133521de1614f87[m Update pylint.ps1, build.ps1
+[33m25c8c9aa0bf2a611907084859519f1140fa471a2[m Update .gitlab-ci.yml file
+[33mb480fb8518ca2ecc3609f6da69503c7685879eb2[m switch into create a new conda env
+[33m465310fb6d0611384f4be7525f347152f2535943[m Update .gitlab-ci.yml file
+[33medb1da05c01c1ad7477811a17cc3796102d3abd4[m modify lint
+[33m8a2f047d6e0b3c0023b0a7eb5a4dfc462056533c[m modify lint
+[33mbc34aef44d0b90033d4d8c6d36e3ea77f99ba840[m return back ps1
+[33m52e0e954c73a8e1bea6068b732e28c992fbe804a[m return back ps1
+[33m4a722b667d36cffde07f355437d7352e1d706e69[m Update .gitlab-ci.yml file
+[33m7e225eeb948f6f7c22d9d48a3a7c6c438d203df7[m pwsh build shell modify
+[33mc2c1084c882c3ca3606a9fe892dc977e5b6d999c[m Update .gitlab-ci.yml file
+[33me26a1cd240300cd35993bda70c53d8d928dc0aa5[m Update .gitlab-ci.yml file
+[33m400b804deaf286c28e06c3f0ff213053c196d3bc[m Update .gitlab-ci.yml file
+[33md3f764a7d293f8a26ee2dbac4bc9395e70323e1d[m Update .gitlab-ci.yml file
+[33m2e6566d8ead00c5f46712794f48ae46b443624cf[m Update .gitlab-ci.yml file
+[33ma839ad1bdbc197f693bc7f9658ba9d353b0615e8[m Update .gitlab-ci.yml file
+[33m61e0fd882619af0d977045b27780bdf14d7de4e1[m Update .gitlab-ci.yml file
+[33m2edfb4962d24dacc3dabbb93978e6bc8b8ac89e0[m Update .gitlab-ci.yml file
+[33me018d8085b33f3d305f71cbfd03710e01eee7bc3[m Update .gitlab-ci.yml
+[33m23de962d07b71f95b2c05b5572d167ec9817a8bb[m Update .gitlab-ci.yml
+[33m95687b788275468e7bd2d8dbfc8315cd73578210[m Update .gitlab-ci.yml
+[33mfd15c1d41a22e54aef1648ee68467463338f8892[m Update pylint.ps1, .gitlab-ci.yml
+[33mbe632f43d821e589288e760357acf3c4399db694[m Update .gitlab-ci.yml, build.ps1, pylint.ps1
+[33m8aeb966dd582f3e315ce00cf399f973e1c5ac5f0[m Update pylint.ps1, build.ps1
+[33m3227b9224aff0fef499f0030b62bc3086a350afb[m Update pylint.ps1
+[33m06eb713086de7bfe9314ad5ffc62cf76ff3e8a61[m pwsh build shell modify
+[33m8e7bf5cdad536c882022ed9b220c4932b7fb0670[m pwsh build shell add
+[33m6f3f0b9ad4cfea5314c51fc027b40c936985362c[m pwsh build shell add
+[33m49a4308efd3765134f699f8b83e24d880a6ec4de[m Update .gitlab-ci.yml file
+[33mb835efd33357c57753f22bc76ec64700bb2549c7[m Update .gitlab-ci.yml file
+[33m19b1c1f646ae5d24e7ac76c6cdf4f3ceb68dd176[m Update .gitlab-ci.yml file
+[33m0eca2b7fc6b3852c9d59346080527b38602e4e0a[m Update .gitlab-ci.yml file
+[33m04edea899d778b689423bd1c3e3255dc6d6950d7[m pwsh build shell add
+[33m67da5bf0817c3100267c491f55a0e3e35df59457[m setupfile update
+[33m860e726773e189647ea1b15c8b632149c6f61fe3[m Update .gitlab-ci.yml file
+[33mfc16a7e4c01a786a0087be6a661c4403f1a73596[m Update .gitlab-ci.yml file
+[33m09e27ac8dd1cbd4b161c10ca2e3db643ac236670[m requirements.txt upload
+[33m0764ad7d8f1f1c0e26b426a280087e4db4be31d1[m Merge branch 'work' of gitlab.com:lzd-1230/debugging-assistant into work
+[33m118b3f8d3827f0c76034b4a2c44d310f61ab9f25[m requirements.txt upload
+[33mcba745daa3518249929f7b93f4f0ebfc0e16e3e9[m Update .gitlab-ci.yml file
+[33me10831c7950ba291ec575ddd450eed0a93d154a3[m requirements.txt upload
+[33mdab03e4d0c043eed2eb2f946f86b8ec0c19ae34f[m update ignore
+[33m4db0622e474ddd22c8cc2a7273f26bc5c1094c19[m 添加了ci文件以及数据收发窗口,收发窗口的功能以及数据显示还未完成
+[33ma4c9c6afa6dac515976d34b3ad19442eba9e9593[m gitnore effect
+[33m839ac6c44acd9211b13de127ccb796ceb66fd00d[m 22.5.15 利用强行关闭串口的异常来使得协程退出
+[33m07be81eca60c01400c4220abca51abc6d66c1dd9[m 22.5.15 利用强行关闭串口的异常来使得协程退出
+[33m6459b65c73d9ff1669844cba4a1f883e7111c494[m 22.5.15 接收数据功能已实现,但是其它细节仍一堆bug
+[33m60f58feeae6d0b0e8055cafc0780adc53086ee45[m 2.15 1.0 添加数据格式
+[33m2602397c582115061175d2a5169d2d39e0a36770[m update Readme.md.
+[33mac6ea756bb8fb3b1f54e84d1cae5288ed4545122[m update Readme.md.
+[33m3c0f135492b333fd13dbd155a2e2d0fb484f2412[m add Readme.md. 添加Readme
+[33m44d9e417a065c47ae272987f219e5de772d46b76[m Merge branch 'master' of gitee.com:lzd-1230/debugging-assistant
+[33m4241306db24518d8249989d274bc8e95e3ebc8b6[m 2.15 1.0 更新requirement.txt
+[33m8b981ea8de5fad9db9eef8360c610253f45585ee[m 2.14 1.0版本打包完成
+[33m7ac89553d2c81646d0d08c54561b6b30022bb230[m Initial commit
+[33m810f5a1ca372054ef85b39a2481c5bf81aae8ecf[m 2.14   基本功能全部完毕,接下来work分支将进行recv功能的线程化,以及设置曲线显示的功能
+[33m88410bbfbfc4016f6e6dfe65f43d70615c652877[m 2.12 最后发现x轴坐标显示还有点问题
+[33m260bb3da548be14262a8aa3c49f04d6aba4a46ad[m 2.12完成基本功能,接下来任务:  1.保存数据功能  2.串口功能  3.16进制转换功能
+[33mfd9a0dd1ed77a2b4b7a47068bf84d8eb9f119dab[m 2.12完成多图像绘制以及光标设置,还差动态配置文件的实现和hex接收的内容就可以交付
+[33m923b6597725496e4977722fe241d7b457d5a1de4[m 2.12,将Line_plot改为线程类之前,目前问题在于有时候无法关闭线程类,也无法暂停等!
+[33mde07e68f9506380e3cb029881b0fabe9a3cd12a7[m 2.11完成TCP服务端的多线程功能,并且实现了多条曲线同框的任务,明天解决16进制按钮以及com口的数据接收功能
