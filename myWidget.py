@@ -1,7 +1,7 @@
 import os
 import time
 import pandas as pd
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal,QCoreApplication,Qt
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QIcon,QFont
 from ui_Widget import Ui_MainWindow
@@ -10,12 +10,21 @@ import utils.global_var as g
 from Plot import Line_plot
 from uart.protocol import app_data_processor,app_data_handler
 
+
 class WidgetLogic(QMainWindow):
     def __init__(self,parent=None): # 单继承ui界面
         super().__init__()
         self.ui = Ui_MainWindow()     # self.ui就可以获得ui的属性
         self.ui.setupUi(self)  # 初始化UI界面
         # self.setWindowOpacity(0.9) # 窗口透明度
+         # 获取显示器分辨率
+        self.ui.desktop = QApplication.desktop()
+        self.ui.screenRect = self.ui.desktop.screenGeometry()
+        self.ui.screenheight = self.ui.screenRect.height()
+        self.ui.screenwidth = self.ui.screenRect.width()
+        self.resize(int(self.ui.screenwidth * 0.7), int(self.ui.screenheight * 0.7))  #启动尺寸自适应
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling) #高分辨率屏幕缩放适应
+
         self.cur_mode = 0      # 状态未连接
         self.widgets_init()
         self.pic = Line_plot(self.ui.socket_graph)
