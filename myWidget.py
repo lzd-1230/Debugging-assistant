@@ -23,7 +23,7 @@ class WidgetLogic(QMainWindow):
         self.ui.screenRect = self.ui.desktop.screenGeometry()
         self.ui.screenheight = self.ui.screenRect.height()
         self.ui.screenwidth = self.ui.screenRect.width()
-        self.resize(self.ui.screenwidth * 0.7, self.ui.screenheight * 0.7)  #启动尺寸自适应
+        self.resize(int(self.ui.screenwidth * 0.7), int(self.ui.screenheight * 0.7))  #启动尺寸自适应
         QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling) #高分辨率屏幕缩放适应
 
         self.cur_mode = 0      # 状态未连接
