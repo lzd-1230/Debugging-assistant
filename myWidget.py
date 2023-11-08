@@ -4,7 +4,6 @@ import pandas as pd
 from PyQt5.QtCore import pyqtSignal,QCoreApplication,Qt
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QIcon,QFont
-from PyQt5.QtWidgets import QApplication
 from ui_Widget import Ui_MainWindow
 from utils.com_utils import *
 import utils.global_var as g
