@@ -147,6 +147,7 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
         if self.ui.com_switch.isChecked() == True:
             self.ui.uart_com.setEnabled(False)
             self.ui.baud_boxcom.setEnabled(False)
+            g.set_var("uart_port", self.ui.uart_com.currentText())
             g.set_var("com_status",True)
             self.com_init(self.loop)
         else:
