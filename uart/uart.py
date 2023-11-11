@@ -24,10 +24,13 @@ class Uart():
         self.get_uart_info()
         self.loop = loop
         # print(f"创建串口任务之前事件循环已经开始{self.loop.is_running()}")
-        asyncio.set_event_loop(self.loop) 
-        self.serial = aioserial.AioSerial(port=self.port, baudrate=self.baudrate,loop=self.loop) 
-        print(f"open current port:{self.port} cur baudrate:{self.baudrate}")
-        self.listen_task = self.loop.create_task(self.start_com()) # 往里面提交任务
+        try:
+            self.serial = aioserial.AioSerial(port=self.port, baudrate=self.baudrate, loop=self.loop)
+            print(f"open current port:{self.port} cur baudrate:{self.baudrate}")
+            self.listen_task = self.loop.create_task(self.start_com())  # 往里面提交任务
+        except Exception as e:
+            return False
+        return True
 
     async def read_and_print(self,aioserial_instance: aioserial.AioSerial):
         while True:
