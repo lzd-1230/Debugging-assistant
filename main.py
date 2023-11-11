@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog
+from PyQt5.QtWidgets import QApplication,QMainWindow,QDialog,QMessageBox
 from PyQt5.QtGui import QIcon,QFont
 from PyQt5.QtCore import pyqtSlot
 from myWidget import WidgetLogic
@@ -12,6 +12,7 @@ import time
 import asyncio
 from dialogs.uart_config_dialog import Uart_Config_dialog
 from dialogs.send_recv_dialog import Data_Interact_dialog
+from utils.com_utils import *
 
 class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     """主窗口类"""
@@ -34,6 +35,7 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
         self.ui.port_input.textChanged.connect(self._get_addr)
         self.ui.ip_com.currentTextChanged.connect(self._ip_com_change_handler)
         self.ui.uart_com.currentTextChanged.connect(self._uart_port_change_handler)
+        self.ui.uart_com.pop_up.connect(self._uart_port_update_handler)
         self.ui.baud_boxcom.currentTextChanged.connect(self._baud_change_handler)
 
     # ip端口改变的槽函数
@@ -51,6 +53,11 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
     def _baud_change_handler(self,cur_text):
         g.set_var("baudrate",int(cur_text))
         self.get_uart_info()
+
+    def _uart_port_update_handler(self):
+        self.ui.uart_com.clear()
+        com_list = get_coms()
+        self.ui.uart_com.addItems(com_list)
 
     # 串口参数修改对话框
     def uart_dialog_raise(self):
@@ -144,12 +151,15 @@ class MainWindow(WidgetLogic,NetworkLogic,UartLogic):
 
     # 控制串口开关的函数
     def com_control_handler(self):
+        serial_init_ret = False
         if self.ui.com_switch.isChecked() == True:
             self.ui.uart_com.setEnabled(False)
             self.ui.baud_boxcom.setEnabled(False)
             g.set_var("uart_port", self.ui.uart_com.currentText())
             g.set_var("com_status",True)
-            self.com_init(self.loop)
+            serial_init_ret = self.com_init(self.loop)
+            if serial_init_ret is False:
+                QMessageBox.critical(self, "错误", "串口打开失败!!!")
         else:
             self.ui.uart_com.setEnabled(True)
             self.ui.baud_boxcom.setEnabled(True)

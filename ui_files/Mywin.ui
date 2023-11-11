@@ -273,7 +273,7 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QComboBox" name="uart_com"/>
+               <widget class="QSerialComboBox" name="uart_com"/>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label">
@@ -418,6 +418,11 @@
    <class>GraphicsLayoutWidget</class>
    <extends>QGraphicsView</extends>
    <header location="global">pyqtgraph</header>
+  </customwidget>
+  <customwidget>
+   <class>QSerialComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">serial_box</header>
   </customwidget>
  </customwidgets>
  <resources/>
